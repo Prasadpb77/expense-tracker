@@ -116,8 +116,7 @@ async function loadDashboard(){
  let income=0;
  let expense=0;
 
- let prasadExpense=0;
- let bhagyashreeExpense=0;
+ const memberTotals = {};
 
  const categoryTotals={};
 
@@ -149,13 +148,9 @@ async function loadDashboard(){
    (categoryTotals[data.category] || 0)
    + data.amount;
 
-   if(data.member==="Prasad"){
-    prasadExpense += data.amount;
-   }
-
-   if(data.member==="Bhagyashree"){
-    bhagyashreeExpense += data.amount;
-   }
+   memberTotals[data.member] =
+   (memberTotals[data.member] || 0)
+   + data.amount;
 
   }
 
@@ -171,10 +166,9 @@ async function loadDashboard(){
  "₹"+(income-expense).toLocaleString();
 
  renderCharts(
-  categoryTotals,
-  prasadExpense,
-  bhagyashreeExpense
- );
+    categoryTotals,
+    memberTotals
+   );
 
  renderRecentTransactions(
   transactions
@@ -332,51 +326,45 @@ function renderRecentTransactions(
 }
 
 function renderCharts(
- categoryTotals,
- prasadExpense,
- bhagyashreeExpense
-){
-
- if(pieChart){
-  pieChart.destroy();
- }
-
- if(memberChart){
-  memberChart.destroy();
- }
-
- pieChart =
- new Chart(
- document.getElementById("expenseChart"),
- {
-  type:"pie",
-  data:{
-   labels:Object.keys(categoryTotals),
-   datasets:[{
-    data:Object.values(categoryTotals)
-   }]
-  }
- });
-
- memberChart =
- new Chart(
- document.getElementById("memberChart"),
- {
-  type:"doughnut",
-  data:{
-   labels:[
-    "Prasad",
-    "Bhagyashree"
-   ],
-   datasets:[{
-    data:[
-     prasadExpense,
-     bhagyashreeExpense
-    ]
-   }]
-  }
- });
-
-}
+    categoryTotals,
+    memberTotals
+   ){
+   
+    if(pieChart){
+     pieChart.destroy();
+    }
+   
+    if(memberChart){
+     memberChart.destroy();
+    }
+   
+    pieChart =
+    new Chart(
+    document.getElementById("expenseChart"),
+    {
+     type:"pie",
+     data:{
+      labels:Object.keys(categoryTotals),
+      datasets:[{
+       data:Object.values(categoryTotals)
+      }]
+     }
+    });
+   
+    memberChart =
+    new Chart(
+    document.getElementById("memberChart"),
+    {
+     type:"doughnut",
+     data:{
+      labels:Object.keys(memberTotals),
+   
+      datasets:[{
+       data:Object.values(memberTotals)
+      }]
+     }
+    });
+   
+   }
 
 loadDashboard();

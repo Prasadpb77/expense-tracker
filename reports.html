@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Reports</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<div class="layout">
+
+<aside class="sidebar">
+
+<h2>💰 Finance</h2>
+
+<ul>
+
+<li>
+<a href="dashboard.html">
+🏠 Dashboard
+</a>
+</li>
+
+<li>
+<a href="transactions.html">
+💸 Transactions
+</a>
+</li>
+
+<li class="active">
+<a href="reports.html">
+📊 Reports
+</a>
+</li>
+
+<li>
+<a href="goals.html">
+🎯 Goals
+</a>
+</li>
+
+</ul>
+
+</aside>
+
+<main>
+
+<h1>📊 Reports</h1>
+
+<div class="charts">
+
+<div class="chart-card">
+
+<h3>Expense Categories</h3>
+
+<canvas id="categoryChart">
+</canvas>
+
+</div>
+
+<div class="chart-card">
+
+<h3>Member Spending</h3>
+
+<canvas id="memberChart">
+</canvas>
+
+</div>
+
+</div>
+
+</main>
+
+</div>
+
+<script type="module"
+src="js/reports.js">
+</script>
+
+</body>
+
+</html>
