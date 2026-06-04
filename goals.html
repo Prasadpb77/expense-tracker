@@ -8,8 +8,7 @@
 
 <title>Goals</title>
 
-<link rel="stylesheet"
-href="css/style.css">
+<link rel="stylesheet" href="css/style.css">
 
 </head>
 
@@ -24,27 +23,19 @@ href="css/style.css">
 <ul>
 
 <li>
-<a href="dashboard.html">
-🏠 Dashboard
-</a>
+<a href="dashboard.html">🏠 Dashboard</a>
 </li>
 
 <li>
-<a href="transactions.html">
-💸 Transactions
-</a>
+<a href="transactions.html">💸 Transactions</a>
 </li>
 
 <li>
-<a href="reports.html">
-📊 Reports
-</a>
+<a href="reports.html">📊 Reports</a>
 </li>
 
 <li class="active">
-<a href="goals.html">
-🎯 Goals
-</a>
+<a href="goals.html">🎯 Goals</a>
 </li>
 
 </ul>
@@ -53,26 +44,26 @@ href="css/style.css">
 
 <main>
 
-<h1>🎯 Savings Goal</h1>
+<h1>🎯 Financial Goals</h1>
 
-<div class="goal-card">
+<div class="goal-form">
 
-<h2>
-🚗 Honda Amaze Fund
-</h2>
+<input
+id="goalName"
+placeholder="Goal Name">
 
-<div class="goal-progress">
+<input
+id="goalTarget"
+type="number"
+placeholder="Target Amount">
 
-<div
-id="goalFill"
-class="goal-fill">
+<button id="addGoalBtn">
+Add Goal
+</button>
+
 </div>
 
-</div>
-
-<p id="goalText">
-₹0 / ₹9,00,000
-</p>
+<div id="goalsContainer">
 
 </div>
 

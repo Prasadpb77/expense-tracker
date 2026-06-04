@@ -567,3 +567,30 @@
     }
 
 }
+.goal-form{
+
+    display:flex;
+    gap:15px;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+    
+    }
+    
+    .goal-form input{
+    
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    
+    }
+    
+    .goal-form button{
+    
+    background:#4f46e5;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    
+    }

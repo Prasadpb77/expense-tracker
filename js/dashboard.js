@@ -47,7 +47,10 @@ transactionForm?.addEventListener(
 saveTransaction
 );
 
-if(localStorage.getItem("theme")==="dark"){
+if(
+ localStorage.getItem("theme")
+ === "dark"
+){
  document.body.classList.add("dark");
 }
 
@@ -55,13 +58,17 @@ themeBtn?.addEventListener(
 "click",
 ()=>{
 
- document.body.classList.toggle("dark");
+ document.body.classList.toggle(
+ "dark"
+ );
 
  localStorage.setItem(
-  "theme",
-  document.body.classList.contains("dark")
-  ? "dark"
-  : "light"
+ "theme",
+ document.body.classList.contains(
+ "dark"
+ )
+ ? "dark"
+ : "light"
  );
 
 }
@@ -89,19 +96,28 @@ async function saveTransaction(e){
  document.getElementById("description").value;
 
  if(amount<=0){
-  alert("Amount must be greater than 0");
+
+  alert(
+  "Amount must be greater than 0"
+  );
+
   return;
+
  }
 
  await addDoc(
- collection(db,"transactions"),
+ collection(
+ db,
+ "transactions"
+ ),
  {
   member,
   type,
   category,
   amount,
   description,
-  createdAt: Timestamp.now()
+  createdAt:
+  Timestamp.now()
  }
  );
 
@@ -116,162 +132,174 @@ async function loadDashboard(){
  let income=0;
  let expense=0;
 
- const memberTotals = {};
-
  const categoryTotals={};
+
+ const memberTotals={};
 
  const transactions=[];
 
  const snapshot =
  await getDocs(
- collection(db,"transactions")
+ collection(
+ db,
+ "transactions"
+ )
  );
 
  snapshot.forEach(doc=>{
 
-  const data = doc.data();
+ const data=
+ doc.data();
 
-  transactions.push({
-   id:doc.id,
-   ...data
-  });
+ transactions.push({
 
-  if(data.type==="Income"){
-   income += data.amount;
-  }
+  id:doc.id,
+  ...data
 
-  if(data.type==="Expense"){
+ });
 
-   expense += data.amount;
+ if(data.type==="Income"){
 
-   categoryTotals[data.category] =
-   (categoryTotals[data.category] || 0)
-   + data.amount;
+  income += data.amount;
 
-   memberTotals[data.member] =
-   (memberTotals[data.member] || 0)
-   + data.amount;
+ }
+
+ if(data.type==="Expense"){
+
+  expense += data.amount;
+
+  categoryTotals[
+   data.category
+  ] =
+  (
+   categoryTotals[
+    data.category
+   ] || 0
+  )
+  + data.amount;
+
+  memberTotals[
+   data.member
+  ] =
+  (
+   memberTotals[
+    data.member
+   ] || 0
+  )
+  + data.amount;
+
+ }
+
+ });
+
+ document.getElementById(
+ "incomeTotal"
+ ).innerText =
+ "₹"+
+ income.toLocaleString();
+
+ document.getElementById(
+ "expenseTotal"
+ ).innerText =
+ "₹"+
+ expense.toLocaleString();
+
+ document.getElementById(
+ "balanceTotal"
+ ).innerText =
+ "₹"+
+ (
+ income-expense
+ ).toLocaleString();
+
+ const savedAmount =
+ income-expense;
+
+ renderCharts(
+ categoryTotals,
+ memberTotals
+ );
+
+ renderRecentTransactions(
+ transactions
+ );
+
+ renderBudgets(
+ categoryTotals
+ );
+
+ loadGoalsWidget(
+ savedAmount
+ );
+
+}
+
+function renderCharts(
+ categoryTotals,
+ memberTotals
+){
+
+ if(pieChart){
+  pieChart.destroy();
+ }
+
+ if(memberChart){
+  memberChart.destroy();
+ }
+
+ pieChart =
+ new Chart(
+ document.getElementById(
+ "expenseChart"
+ ),
+ {
+  type:"pie",
+
+  data:{
+
+   labels:
+   Object.keys(
+   categoryTotals
+   ),
+
+   datasets:[{
+
+    data:
+    Object.values(
+    categoryTotals
+    )
+
+   }]
 
   }
 
  });
 
- document.getElementById("incomeTotal").innerText =
- "₹"+income.toLocaleString();
-
- document.getElementById("expenseTotal").innerText =
- "₹"+expense.toLocaleString();
-
- document.getElementById("balanceTotal").innerText =
- "₹"+(income-expense).toLocaleString();
-
- renderCharts(
-    categoryTotals,
-    memberTotals
-   );
-
- renderRecentTransactions(
-  transactions
- );
-
- renderGoal(
-  income,
-  expense
- );
-
- renderBudgets(
-  categoryTotals
- );
-
-}
-
-function renderGoal(
- income,
- expense
-){
-
- const saved =
- income-expense;
-
- const target =
- 900000;
-
- const percent =
- Math.min(
- (saved/target)*100,
- 100
- );
-
- const goalFill =
- document.getElementById("goalFill");
-
- const goalText =
- document.getElementById("goalText");
-
- if(goalFill){
-  goalFill.style.width =
-  percent + "%";
- }
-
- if(goalText){
-  goalText.innerText =
-  `₹${saved.toLocaleString()} / ₹${target.toLocaleString()}`;
- }
-
-}
-
-function renderBudgets(
- categoryTotals
-){
-
- const container =
+ memberChart =
+ new Chart(
  document.getElementById(
- "budgetContainer"
- );
+ "memberChart"
+ ),
+ {
+  type:"doughnut",
 
- if(!container) return;
+  data:{
 
- container.innerHTML="";
+   labels:
+   Object.keys(
+   memberTotals
+   ),
 
- Object.keys(budgets)
- .forEach(category=>{
+   datasets:[{
 
-  const spent =
-  categoryTotals[category] || 0;
+    data:
+    Object.values(
+    memberTotals
+    )
 
-  const budget =
-  budgets[category];
+   }]
 
-  const percent =
-  Math.min(
-   (spent/budget)*100,
-   100
-  );
-
-  container.innerHTML += `
-
-  <div class="budget-card">
-
-    <h4>${category}</h4>
-
-    <p>
-      ₹${spent}
-      /
-      ₹${budget}
-    </p>
-
-    <div class="budget-bar">
-
-      <div
-      class="budget-fill"
-      style="width:${percent}%">
-      </div>
-
-    </div>
-
-  </div>
-
-  `;
+  }
 
  });
 
@@ -291,12 +319,15 @@ function renderRecentTransactions(
  body.innerHTML="";
 
  transactions
+
  .sort(
  (a,b)=>
  b.createdAt.seconds -
  a.createdAt.seconds
  )
+
  .slice(0,10)
+
  .forEach(item=>{
 
  body.innerHTML += `
@@ -311,11 +342,17 @@ function renderRecentTransactions(
  }
  </td>
 
- <td>${item.member}</td>
+ <td>
+ ${item.member}
+ </td>
 
- <td>${item.category}</td>
+ <td>
+ ${item.category}
+ </td>
 
- <td>₹${item.amount}</td>
+ <td>
+ ₹${item.amount}
+ </td>
 
  </tr>
 
@@ -325,46 +362,140 @@ function renderRecentTransactions(
 
 }
 
-function renderCharts(
-    categoryTotals,
-    memberTotals
-   ){
-   
-    if(pieChart){
-     pieChart.destroy();
-    }
-   
-    if(memberChart){
-     memberChart.destroy();
-    }
-   
-    pieChart =
-    new Chart(
-    document.getElementById("expenseChart"),
-    {
-     type:"pie",
-     data:{
-      labels:Object.keys(categoryTotals),
-      datasets:[{
-       data:Object.values(categoryTotals)
-      }]
-     }
-    });
-   
-    memberChart =
-    new Chart(
-    document.getElementById("memberChart"),
-    {
-     type:"doughnut",
-     data:{
-      labels:Object.keys(memberTotals),
-   
-      datasets:[{
-       data:Object.values(memberTotals)
-      }]
-     }
-    });
-   
-   }
+function renderBudgets(
+ categoryTotals
+){
+
+ const container =
+ document.getElementById(
+ "budgetContainer"
+ );
+
+ if(!container) return;
+
+ container.innerHTML="";
+
+ Object.keys(budgets)
+ .forEach(category=>{
+
+ const spent =
+ categoryTotals[
+ category
+ ] || 0;
+
+ const budget =
+ budgets[
+ category
+ ];
+
+ const percent =
+ Math.min(
+ (spent/budget)*100,
+ 100
+ );
+
+ container.innerHTML += `
+
+ <div class="budget-card">
+
+ <h4>
+ ${category}
+ </h4>
+
+ <p>
+
+ ₹${spent}
+
+ /
+
+ ₹${budget}
+
+ </p>
+
+ <div class="budget-bar">
+
+ <div
+ class="budget-fill"
+ style="
+ width:${percent}%">
+ </div>
+
+ </div>
+
+ </div>
+
+ `;
+
+ });
+
+}
+
+async function loadGoalsWidget(
+ savedAmount
+){
+
+ const container =
+ document.getElementById(
+ "dashboardGoals"
+ );
+
+ if(!container) return;
+
+ container.innerHTML="";
+
+ const snapshot =
+ await getDocs(
+ collection(
+ db,
+ "goals"
+ )
+ );
+
+ snapshot.forEach(goal=>{
+
+ const data=
+ goal.data();
+
+ const percent=
+ Math.min(
+ (savedAmount/data.target)*100,
+ 100
+ );
+
+ container.innerHTML += `
+
+ <div class="goal-card">
+
+ <h3>
+ ${data.name}
+ </h3>
+
+ <div class="goal-progress">
+
+ <div
+ class="goal-fill"
+ style="
+ width:${percent}%">
+ </div>
+
+ </div>
+
+ <p>
+
+ ₹${savedAmount.toLocaleString()}
+
+ /
+
+ ₹${data.target.toLocaleString()}
+
+ </p>
+
+ </div>
+
+ `;
+
+ });
+
+}
 
 loadDashboard();
