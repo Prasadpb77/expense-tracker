@@ -1,11 +1,42 @@
-import {auth} from './firebase-config.js';
-import {signInWithEmailAndPassword,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { auth } from "./firebase-config.js";
 
-onAuthStateChanged(auth,u=>{if(u) location='dashboard.html';});
+import {
+  signInWithEmailAndPassword
+}
+from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 
-document.getElementById('loginBtn').onclick=async()=>{
-try{
-await signInWithEmailAndPassword(auth,email.value,password.value);
-location='dashboard.html';
-}catch(e){document.getElementById('error').innerText=e.message;}
-};
+const form = document.getElementById("loginForm");
+
+form.addEventListener("submit", async (e) => {
+
+  e.preventDefault();
+
+  const email =
+    document.getElementById("email").value;
+
+  const password =
+    document.getElementById("password").value;
+
+  const error =
+    document.getElementById("errorMessage");
+
+  try {
+
+    await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    window.location.href =
+      "dashboard.html";
+
+  }
+  catch (err) {
+
+    error.innerText =
+      err.message;
+
+  }
+
+});

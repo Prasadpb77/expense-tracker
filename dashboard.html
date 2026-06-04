@@ -1,34 +1,140 @@
 <!DOCTYPE html>
-<html><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Dashboard</title>
-<link rel="stylesheet" href="css/style.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<html>
+
+<head>
+
+    <title>Dashboard</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
+
 <body>
-<header><h2>Expense Dashboard</h2><button id="logoutBtn">Logout</button></header>
-<div class="summary">
-<div class="card"><h3>Total Income</h3><p id="income">0</p></div>
-<div class="card"><h3>Total Expense</h3><p id="expense">0</p></div>
-<div class="card"><h3>Balance</h3><p id="balance">0</p></div>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <h2>💰 Finance</h2>
+
+        <ul>
+            <li class="active">Dashboard</li>
+            <li>Transactions</li>
+            <li>Reports</li>
+            <li>Goals</li>
+        </ul>
+
+        <button id="logoutBtn" class="logout-btn">
+            Logout
+        </button>
+
+    </aside>
+
+    <main>
+
+        <div class="topbar">
+
+            <h1>
+                Prasad ❤️ Bhagyashree
+            </h1>
+
+        </div>
+
+        <div class="cards">
+
+            <div class="card income-card">
+                <h3>Total Income</h3>
+                <h2 id="incomeTotal">₹0</h2>
+            </div>
+
+            <div class="card expense-card">
+                <h3>Total Expense</h3>
+                <h2 id="expenseTotal">₹0</h2>
+            </div>
+
+            <div class="card balance-card">
+                <h3>Balance</h3>
+                <h2 id="balanceTotal">₹0</h2>
+            </div>
+
+        </div>
+
+        <div class="add-section">
+
+            <h2>Add Transaction</h2>
+
+            <form id="transactionForm">
+
+                <select id="member">
+                    <option>Prasad</option>
+                    <option>Bhagyashree</option>
+                    <option>Comman</option>
+                </select>
+
+                <select id="type">
+                    <option>Income</option>
+                    <option>Expense</option>
+                </select>
+
+                <select id="category">
+
+                    <option>Salary</option>
+                    <option>Food</option>
+                    <option>Fuel</option>
+                    <option>Travel</option>
+                    <option>Shopping</option>
+                    <option>Bills</option>
+                    <option>EMI</option>
+                    <option>Medical</option>
+                    <option>Entertainment</option>
+                    <option>Investment</option>
+                    <option>Other</option>
+
+                </select>
+
+                <input
+                    type="number"
+                    id="amount"
+                    placeholder="Amount"
+                    required>
+
+                <input
+                    type="text"
+                    id="description"
+                    placeholder="Description">
+
+                <button type="submit">
+                    Save Transaction
+                </button>
+
+            </form>
+
+        </div>
+
+        <div class="charts">
+
+            <div class="chart-card">
+                <canvas id="expenseChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <canvas id="memberChart"></canvas>
+            </div>
+
+        </div>
+
+    </main>
+
 </div>
-<div class="card">
-<form id="txnForm">
-<select id="member" required><option>Prasad</option><option>Bhagyashree</option><option>Comman</option></select>
-<select id="type" required><option>Income</option><option>Expense</option></select>
-<select id="category" required>
-<option>Salary</option><option>Food</option><option>Travel</option><option>Fuel</option>
-<option>Shopping</option><option>Bills</option><option>EMI</option><option>Medical</option> 
-<option>Entertainment</option><option>Investment</option><option>Other</option>
-</select>
-<input id="amount" type="number" min="1" required placeholder="Amount">
-<input id="description" placeholder="Description">
-<button>Add Transaction</button>
-</form></div>
-<div class="grid">
-<canvas id="pieChart"></canvas>
-<canvas id="barChart"></canvas>
-<canvas id="memberChart"></canvas>
-</div>
-<script type="module" src="js/dashboard.js"></script>
-</body></html>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script type="module"
+src="js/dashboard.js">
+</script>
+
+</body>
+
+</html>
