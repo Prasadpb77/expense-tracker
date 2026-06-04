@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 
-    <title>Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Couple Finance Dashboard</title>
 
     <link rel="stylesheet" href="css/style.css">
 
@@ -15,67 +18,177 @@
 
 <div class="layout">
 
+    <!-- Sidebar -->
+
     <aside class="sidebar">
 
         <h2>💰 Finance</h2>
 
         <ul>
-            <li class="active">Dashboard</li>
-            <li>Transactions</li>
-            <li>Reports</li>
-            <li>Goals</li>
+
+            <li class="active">
+                <a href="dashboard.html">
+                    🏠 Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a href="transactions.html">
+                    💸 Transactions
+                </a>
+            </li>
+
+            <li>
+                <a href="reports.html">
+                    📊 Reports
+                </a>
+            </li>
+
+            <li>
+                <a href="goals.html">
+                    🎯 Goals
+                </a>
+            </li>
+
         </ul>
 
-        <button id="logoutBtn" class="logout-btn">
+        <button
+            id="logoutBtn"
+            class="logout-btn">
+
             Logout
+
         </button>
 
     </aside>
 
+    <!-- Main Content -->
+
     <main>
+
+        <!-- Header -->
 
         <div class="topbar">
 
-            <h1>
-                Prasad ❤️ Bhagyashree
-            </h1>
+            <div>
+
+                <h1>
+                    Prasad ❤️ Bhagyashree
+                </h1>
+
+                <p>
+                    Couple Finance Manager
+                </p>
+
+            </div>
+
+            <button id="themeToggle">
+                🌙
+            </button>
 
         </div>
+
+        <!-- Summary Cards -->
 
         <div class="cards">
 
             <div class="card income-card">
+
                 <h3>Total Income</h3>
-                <h2 id="incomeTotal">₹0</h2>
+
+                <h2 id="incomeTotal">
+                    ₹0
+                </h2>
+
             </div>
 
             <div class="card expense-card">
+
                 <h3>Total Expense</h3>
-                <h2 id="expenseTotal">₹0</h2>
+
+                <h2 id="expenseTotal">
+                    ₹0
+                </h2>
+
             </div>
 
             <div class="card balance-card">
+
                 <h3>Balance</h3>
-                <h2 id="balanceTotal">₹0</h2>
+
+                <h2 id="balanceTotal">
+                    ₹0
+                </h2>
+
             </div>
 
         </div>
 
+        <!-- Savings Goal -->
+
+        <div class="goal-card">
+
+            <h3>
+                🚗 Honda Amaze Goal
+            </h3>
+
+            <div class="goal-progress">
+
+                <div
+                    id="goalFill"
+                    class="goal-fill">
+                </div>
+
+            </div>
+
+            <p id="goalText">
+                ₹0 / ₹9,00,000
+            </p>
+
+        </div>
+
+        <!-- Budget Tracker -->
+
+        <div id="budgetContainer">
+
+        </div>
+
+        <!-- Add Transaction -->
+
         <div class="add-section">
 
-            <h2>Add Transaction</h2>
+            <h2>
+                Add Transaction
+            </h2>
 
             <form id="transactionForm">
 
                 <select id="member">
-                    <option>Prasad</option>
-                    <option>Bhagyashree</option>
-                    <option>Comman</option>
+
+                    <option>
+                        Prasad
+                    </option>
+
+                    <option>
+                        Bhagyashree
+                    </option>
+
+                    <option>
+                        Common
+                    </option>
+
                 </select>
 
                 <select id="type">
-                    <option>Income</option>
-                    <option>Expense</option>
+
+                    <option>
+                        Income
+                    </option>
+
+                    <option>
+                        Expense
+                    </option>
+
                 </select>
 
                 <select id="category">
@@ -113,15 +226,62 @@
 
         </div>
 
+        <!-- Charts -->
+
         <div class="charts">
 
             <div class="chart-card">
-                <canvas id="expenseChart"></canvas>
+
+                <h3>
+                    Expense Breakdown
+                </h3>
+
+                <canvas id="expenseChart">
+                </canvas>
+
             </div>
 
             <div class="chart-card">
-                <canvas id="memberChart"></canvas>
+
+                <h3>
+                    Member Comparison
+                </h3>
+
+                <canvas id="memberChart">
+                </canvas>
+
             </div>
+
+        </div>
+
+        <!-- Recent Transactions -->
+
+        <div class="recent-card">
+
+            <h2>
+                Recent Transactions
+            </h2>
+
+            <table class="recent-table">
+
+                <thead>
+
+                <tr>
+
+                    <th>Date</th>
+                    <th>Member</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+
+                </tr>
+
+                </thead>
+
+                <tbody id="recentTransactions">
+
+                </tbody>
+
+            </table>
 
         </div>
 
@@ -129,9 +289,12 @@
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script
+src="https://cdn.jsdelivr.net/npm/chart.js">
+</script>
 
-<script type="module"
+<script
+type="module"
 src="js/dashboard.js">
 </script>
 

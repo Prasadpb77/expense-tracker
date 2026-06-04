@@ -1,20 +1,15 @@
-import { auth, db }
-from "./firebase-config.js";
+import { auth, db } from "./firebase-config.js";
 
 import {
   signOut
-}
-from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 
 import {
-
   collection,
   addDoc,
   getDocs,
   Timestamp
-
-}
-from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 const transactionForm =
 document.getElementById("transactionForm");
@@ -22,10 +17,21 @@ document.getElementById("transactionForm");
 const logoutBtn =
 document.getElementById("logoutBtn");
 
+const themeBtn =
+document.getElementById("themeToggle");
+
 let pieChart;
 let memberChart;
 
-logoutBtn.addEventListener(
+const budgets = {
+  Food: 5000,
+  Fuel: 3000,
+  Shopping: 10000,
+  Bills: 8000,
+  Travel: 5000
+};
+
+logoutBtn?.addEventListener(
 "click",
 async ()=>{
 
@@ -36,9 +42,29 @@ async ()=>{
 }
 );
 
-transactionForm.addEventListener(
+transactionForm?.addEventListener(
 "submit",
 saveTransaction
+);
+
+if(localStorage.getItem("theme")==="dark"){
+ document.body.classList.add("dark");
+}
+
+themeBtn?.addEventListener(
+"click",
+()=>{
+
+ document.body.classList.toggle("dark");
+
+ localStorage.setItem(
+  "theme",
+  document.body.classList.contains("dark")
+  ? "dark"
+  : "light"
+ );
+
+}
 );
 
 async function saveTransaction(e){
@@ -63,39 +89,25 @@ async function saveTransaction(e){
  document.getElementById("description").value;
 
  if(amount<=0){
-
-   alert("Amount must be greater than 0");
-   return;
-
+  alert("Amount must be greater than 0");
+  return;
  }
-
- try{
 
  await addDoc(
  collection(db,"transactions"),
  {
-
   member,
   type,
   category,
   amount,
   description,
-
-  createdAt:
-  Timestamp.now()
-
- });
+  createdAt: Timestamp.now()
+ }
+ );
 
  transactionForm.reset();
 
  loadDashboard();
-
- }
- catch(error){
-
- console.error(error);
-
- }
 
 }
 
@@ -109,6 +121,8 @@ async function loadDashboard(){
 
  const categoryTotals={};
 
+ const transactions=[];
+
  const snapshot =
  await getDocs(
  collection(db,"transactions")
@@ -116,59 +130,204 @@ async function loadDashboard(){
 
  snapshot.forEach(doc=>{
 
- const data = doc.data();
+  const data = doc.data();
 
- if(data.type==="Income"){
+  transactions.push({
+   id:doc.id,
+   ...data
+  });
 
- income += data.amount;
+  if(data.type==="Income"){
+   income += data.amount;
+  }
 
- }
+  if(data.type==="Expense"){
 
- if(data.type==="Expense"){
+   expense += data.amount;
 
- expense += data.amount;
+   categoryTotals[data.category] =
+   (categoryTotals[data.category] || 0)
+   + data.amount;
 
- categoryTotals[data.category] =
- (categoryTotals[data.category] || 0)
- + data.amount;
+   if(data.member==="Prasad"){
+    prasadExpense += data.amount;
+   }
 
- if(data.member==="Prasad"){
+   if(data.member==="Bhagyashree"){
+    bhagyashreeExpense += data.amount;
+   }
 
-  prasadExpense += data.amount;
-
- }
-
- if(data.member==="Bhagyashree"){
-
-  bhagyashreeExpense += data.amount;
-
- }
-
- }
+  }
 
  });
 
- document.getElementById(
- "incomeTotal"
- ).innerText =
+ document.getElementById("incomeTotal").innerText =
  "₹"+income.toLocaleString();
 
- document.getElementById(
- "expenseTotal"
- ).innerText =
+ document.getElementById("expenseTotal").innerText =
  "₹"+expense.toLocaleString();
 
- document.getElementById(
- "balanceTotal"
- ).innerText =
- "₹"+(income-expense)
- .toLocaleString();
+ document.getElementById("balanceTotal").innerText =
+ "₹"+(income-expense).toLocaleString();
 
  renderCharts(
- categoryTotals,
- prasadExpense,
- bhagyashreeExpense
+  categoryTotals,
+  prasadExpense,
+  bhagyashreeExpense
  );
+
+ renderRecentTransactions(
+  transactions
+ );
+
+ renderGoal(
+  income,
+  expense
+ );
+
+ renderBudgets(
+  categoryTotals
+ );
+
+}
+
+function renderGoal(
+ income,
+ expense
+){
+
+ const saved =
+ income-expense;
+
+ const target =
+ 900000;
+
+ const percent =
+ Math.min(
+ (saved/target)*100,
+ 100
+ );
+
+ const goalFill =
+ document.getElementById("goalFill");
+
+ const goalText =
+ document.getElementById("goalText");
+
+ if(goalFill){
+  goalFill.style.width =
+  percent + "%";
+ }
+
+ if(goalText){
+  goalText.innerText =
+  `₹${saved.toLocaleString()} / ₹${target.toLocaleString()}`;
+ }
+
+}
+
+function renderBudgets(
+ categoryTotals
+){
+
+ const container =
+ document.getElementById(
+ "budgetContainer"
+ );
+
+ if(!container) return;
+
+ container.innerHTML="";
+
+ Object.keys(budgets)
+ .forEach(category=>{
+
+  const spent =
+  categoryTotals[category] || 0;
+
+  const budget =
+  budgets[category];
+
+  const percent =
+  Math.min(
+   (spent/budget)*100,
+   100
+  );
+
+  container.innerHTML += `
+
+  <div class="budget-card">
+
+    <h4>${category}</h4>
+
+    <p>
+      ₹${spent}
+      /
+      ₹${budget}
+    </p>
+
+    <div class="budget-bar">
+
+      <div
+      class="budget-fill"
+      style="width:${percent}%">
+      </div>
+
+    </div>
+
+  </div>
+
+  `;
+
+ });
+
+}
+
+function renderRecentTransactions(
+ transactions
+){
+
+ const body =
+ document.getElementById(
+ "recentTransactions"
+ );
+
+ if(!body) return;
+
+ body.innerHTML="";
+
+ transactions
+ .sort(
+ (a,b)=>
+ b.createdAt.seconds -
+ a.createdAt.seconds
+ )
+ .slice(0,10)
+ .forEach(item=>{
+
+ body.innerHTML += `
+
+ <tr>
+
+ <td>
+ ${
+ item.createdAt
+ ?.toDate()
+ .toLocaleDateString()
+ }
+ </td>
+
+ <td>${item.member}</td>
+
+ <td>${item.category}</td>
+
+ <td>₹${item.amount}</td>
+
+ </tr>
+
+ `;
+
+ });
 
 }
 
@@ -179,67 +338,43 @@ function renderCharts(
 ){
 
  if(pieChart){
- pieChart.destroy();
+  pieChart.destroy();
  }
 
  if(memberChart){
- memberChart.destroy();
+  memberChart.destroy();
  }
-
- const expenseCtx =
- document.getElementById(
- "expenseChart"
- );
 
  pieChart =
- new Chart(expenseCtx,{
-
- type:"pie",
-
- data:{
-
- labels:
- Object.keys(categoryTotals),
-
- datasets:[{
-
- data:
- Object.values(categoryTotals)
-
- }]
-
- }
-
+ new Chart(
+ document.getElementById("expenseChart"),
+ {
+  type:"pie",
+  data:{
+   labels:Object.keys(categoryTotals),
+   datasets:[{
+    data:Object.values(categoryTotals)
+   }]
+  }
  });
 
- const memberCtx =
- document.getElementById(
- "memberChart"
- );
-
  memberChart =
- new Chart(memberCtx,{
-
- type:"doughnut",
-
- data:{
-
- labels:[
- "Prasad",
- "Bhagyashree"
- ],
-
- datasets:[{
-
- data:[
- prasadExpense,
- bhagyashreeExpense
- ]
-
- }]
-
- }
-
+ new Chart(
+ document.getElementById("memberChart"),
+ {
+  type:"doughnut",
+  data:{
+   labels:[
+    "Prasad",
+    "Bhagyashree"
+   ],
+   datasets:[{
+    data:[
+     prasadExpense,
+     bhagyashreeExpense
+    ]
+   }]
+  }
  });
 
 }
