@@ -269,3 +269,73 @@
     }
     
     }
+    .transaction-table{
+
+        width:100%;
+        
+        border-collapse:collapse;
+        
+        background:white;
+        
+        margin-top:20px;
+        
+        border-radius:20px;
+        
+        overflow:hidden;
+        
+        }
+        
+        .transaction-table th{
+        
+        background:#4f46e5;
+        
+        color:white;
+        
+        padding:15px;
+        
+        }
+        
+        .transaction-table td{
+        
+        padding:15px;
+        
+        border-bottom:1px solid #eee;
+        
+        }
+        
+        .filter-card{
+        
+        display:flex;
+        
+        gap:15px;
+        
+        margin-bottom:20px;
+        
+        }
+        
+        .filter-card input,
+        .filter-card select{
+        
+        padding:12px;
+        
+        border:1px solid #ddd;
+        
+        border-radius:10px;
+        
+        }
+        
+        .delete-btn{
+        
+        background:#ef4444;
+        
+        color:white;
+        
+        border:none;
+        
+        padding:8px 12px;
+        
+        border-radius:8px;
+        
+        cursor:pointer;
+        
+        }
