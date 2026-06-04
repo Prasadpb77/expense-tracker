@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<header><h2>Expense Dashboard</h2><button id="logoutBtn">Logout</button></header>
+<div class="summary">
+<div class="card"><h3>Total Income</h3><p id="income">0</p></div>
+<div class="card"><h3>Total Expense</h3><p id="expense">0</p></div>
+<div class="card"><h3>Balance</h3><p id="balance">0</p></div>
+</div>
+<div class="card">
+<form id="txnForm">
+<select id="member" required><option>Prasad</option><option>Bhagyashree</option></select>
+<select id="type" required><option>Income</option><option>Expense</option></select>
+<select id="category" required>
+<option>Salary</option><option>Food</option><option>Travel</option><option>Fuel</option>
+<option>Shopping</option><option>Bills</option><option>EMI</option><option>Medical</option>
+<option>Entertainment</option><option>Investment</option><option>Other</option>
+</select>
+<input id="amount" type="number" min="1" required placeholder="Amount">
+<input id="description" placeholder="Description">
+<button>Add Transaction</button>
+</form></div>
+<div class="grid">
+<canvas id="pieChart"></canvas>
+<canvas id="barChart"></canvas>
+<canvas id="memberChart"></canvas>
+</div>
+<script type="module" src="js/dashboard.js"></script>
+</body></html>
