@@ -13,7 +13,7 @@ const filterType = document.getElementById("filterType");
 
 let transactions = [];
 
-const members = ["Prasad", "Bhagyashree", "Common"];
+const members = ["Prasad", "Bhagyashree", "Common","Credit Card"];
 const categories = [
   "Salary",
   "Food",
