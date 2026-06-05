@@ -13,35 +13,17 @@ const filterType = document.getElementById("filterType");
 
 let transactions = [];
 
-const transactionTypes = ["Income", "Expense"];
-const transactionCategories = [
-  "Salary",
-  "Food",
-  "Fuel",
-  "Travel",
-  "Shopping",
-  "Bills",
-  "EMI",
-  "Medical",
-  "Entertainment",
-  "Investment",
-  "Other",
-  "Family Contribution",
-  "Grocerry",
-  "Fruits & DryFruits",
-  "Vegetables",
-  "Gifts"
-];
-
 async function loadTransactions() {
   const snapshot = await getDocs(collection(db, "transactions"));
   transactions = [];
+
   snapshot.forEach(d => {
     transactions.push({
       id: d.id,
       ...d.data()
     });
   });
+
   renderTable();
 }
 
@@ -68,8 +50,8 @@ function renderTable() {
       <td>₹${item.amount}</td>
       <td>${item.description}</td>
       <td>
-        <button class="edit-btn" onclick="editTransaction('${item.id}')">Edit</button>
-        <button class="delete-btn" onclick="deleteTransaction('${item.id}')">Delete</button>
+        <button class="btn edit-btn" onclick="editTransaction('${item.id}')">Edit</button>
+        <button class="btn delete-btn" onclick="deleteTransaction('${item.id}')">Delete</button>
       </td>
     `;
 
@@ -77,43 +59,27 @@ function renderTable() {
   });
 }
 
-window.deleteTransaction = async function(id) {
+window.deleteTransaction = async function (id) {
   if (!confirm("Delete Transaction?")) return;
   await deleteDoc(doc(db, "transactions", id));
   loadTransactions();
 };
 
-window.editTransaction = async function(id) {
+window.editTransaction = async function (id) {
   const transaction = transactions.find(t => t.id === id);
   if (!transaction) return;
 
-  const newAmount = prompt("Enter new amount:", transaction.amount);
-  if (newAmount === null) return;
+  const newAmount = Number(prompt("Enter new amount:", transaction.amount));
+  if (isNaN(newAmount) || newAmount <= 0) return alert("Invalid amount!");
 
-  const newDescription = prompt("Enter new description:", transaction.description);
-  if (newDescription === null) return;
+  const newType = prompt("Enter new type (Income/Expense):", transaction.type);
+  if (newType !== "Income" && newType !== "Expense") return alert("Invalid type!");
 
-  const newType = prompt(
-    `Enter new type (Income/Expense):`,
-    transaction.type
-  );
-  if (!transactionTypes.includes(newType)) {
-    alert("Invalid type! Must be Income or Expense.");
-    return;
-  }
-
-  const newCategory = prompt(
-    `Enter new category:\n${transactionCategories.join(", ")}`,
-    transaction.category
-  );
-  if (!transactionCategories.includes(newCategory)) {
-    alert("Invalid category!");
-    return;
-  }
+  const newCategory = prompt("Enter new category:", transaction.category);
+  if (!newCategory) return alert("Invalid category!");
 
   await updateDoc(doc(db, "transactions", id), {
-    amount: Number(newAmount),
-    description: newDescription,
+    amount: newAmount,
     type: newType,
     category: newCategory
   });
@@ -121,7 +87,8 @@ window.editTransaction = async function(id) {
   loadTransactions();
 };
 
-searchBox?.addEventListener("input", renderTable);
-filterType?.addEventListener("change", renderTable);
+// Event listeners for search & filter
+searchBox.addEventListener("input", renderTable);
+filterType.addEventListener("change", renderTable);
 
 loadTransactions();

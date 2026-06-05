@@ -967,3 +967,31 @@ background:#1e293b;
             .dark .budget-card{
                 background:#1e293b;
             }       
+/* Buttons for Transactions Table */
+.transaction-table .btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .transaction-table .edit-btn {
+    background-color: #4f46e5; /* primary dashboard color */
+    color: white;
+    margin-right: 5px;
+  }
+  
+  .transaction-table .edit-btn:hover {
+    background-color: #3730a3;
+  }
+  
+  .transaction-table .delete-btn {
+    background-color: #ef4444; /* red */
+    color: white;
+  }
+  
+  .transaction-table .delete-btn:hover {
+    background-color: #b91c1c;
+  }
