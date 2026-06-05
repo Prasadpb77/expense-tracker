@@ -4,8 +4,7 @@ import {
   getDocs,
   deleteDoc,
   doc,
-  updateDoc,
-  Timestamp
+  updateDoc
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 const tableBody = document.getElementById("transactionBody");
@@ -13,7 +12,26 @@ const searchBox = document.getElementById("searchBox");
 const filterType = document.getElementById("filterType");
 
 let transactions = [];
-let editingId = null;
+
+const transactionTypes = ["Income", "Expense"];
+const transactionCategories = [
+  "Salary",
+  "Food",
+  "Fuel",
+  "Travel",
+  "Shopping",
+  "Bills",
+  "EMI",
+  "Medical",
+  "Entertainment",
+  "Investment",
+  "Other",
+  "Family Contribution",
+  "Grocerry",
+  "Fruits & DryFruits",
+  "Vegetables",
+  "Gifts"
+];
 
 async function loadTransactions() {
   const snapshot = await getDocs(collection(db, "transactions"));
@@ -65,67 +83,45 @@ window.deleteTransaction = async function(id) {
   loadTransactions();
 };
 
-window.editTransaction = function(id) {
-  const tx = transactions.find(t => t.id === id);
-  if (!tx) return;
+window.editTransaction = async function(id) {
+  const transaction = transactions.find(t => t.id === id);
+  if (!transaction) return;
 
-  editingId = id;
+  const newAmount = prompt("Enter new amount:", transaction.amount);
+  if (newAmount === null) return;
 
-  document.getElementById("member").value = tx.member;
-  document.getElementById("type").value = tx.type;
-  document.getElementById("category").value = tx.category;
-  document.getElementById("amount").value = tx.amount;
-  document.getElementById("description").value = tx.description;
+  const newDescription = prompt("Enter new description:", transaction.description);
+  if (newDescription === null) return;
 
-  const submitBtn = document.querySelector("#transactionForm button[type='submit']");
-  submitBtn.textContent = "Update Transaction";
-};
-
-const transactionForm = document.getElementById("transactionForm");
-
-transactionForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const member = document.getElementById("member").value;
-  const type = document.getElementById("type").value;
-  const category = document.getElementById("category").value;
-  const amount = Number(document.getElementById("amount").value);
-  const description = document.getElementById("description").value;
-
-  if (amount <= 0) {
-    alert("Amount must be greater than 0");
+  const newType = prompt(
+    `Enter new type (Income/Expense):`,
+    transaction.type
+  );
+  if (!transactionTypes.includes(newType)) {
+    alert("Invalid type! Must be Income or Expense.");
     return;
   }
 
-  if (editingId) {
-    // Update existing transaction
-    await updateDoc(doc(db, "transactions", editingId), {
-      member,
-      type,
-      category,
-      amount,
-      description,
-      createdAt: Timestamp.now()
-    });
-    editingId = null;
-    transactionForm.querySelector("button[type='submit']").textContent = "Save Transaction";
-  } else {
-    // Add new transaction
-    await addDoc(collection(db, "transactions"), {
-      member,
-      type,
-      category,
-      amount,
-      description,
-      createdAt: Timestamp.now()
-    });
+  const newCategory = prompt(
+    `Enter new category:\n${transactionCategories.join(", ")}`,
+    transaction.category
+  );
+  if (!transactionCategories.includes(newCategory)) {
+    alert("Invalid category!");
+    return;
   }
 
-  transactionForm.reset();
-  loadTransactions();
-});
+  await updateDoc(doc(db, "transactions", id), {
+    amount: Number(newAmount),
+    description: newDescription,
+    type: newType,
+    category: newCategory
+  });
 
-searchBox.addEventListener("input", renderTable);
-filterType.addEventListener("change", renderTable);
+  loadTransactions();
+};
+
+searchBox?.addEventListener("input", renderTable);
+filterType?.addEventListener("change", renderTable);
 
 loadTransactions();
