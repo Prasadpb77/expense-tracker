@@ -9,17 +9,17 @@ import {
 from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 const categories = [
-
-"Food",
-"Fuel",
-"Travel",
-"Shopping",
-"Bills",
-"Medical",
-"EMI"
-
-];
-
+    "Food",
+    "Fuel",
+    "Travel",
+    "Shopping",
+    "Bills",
+    "Medical",
+    "EMI",
+    "Entertainment",
+    "Investment",
+    "Other"
+   ];
 async function loadBudgets(){
 
  const container =
@@ -28,12 +28,11 @@ async function loadBudgets(){
  );
 
  const snapshot =
- await getDoc(
- doc(
- db,
- "settings",
- "budgetLimits"
- )
+ await getDocs(
+  collection(
+   db,
+   "budgetLimits"
+  )
  );
 
  const data =
