@@ -30,7 +30,8 @@ const categories = [
   "Family Contribution",
   "Fruits & DryFruits",
   "Vegetables",
-  "Gifts"
+  "Gifts",
+  "RD(Goals)"
 ];
 
 async function loadTransactions() {
