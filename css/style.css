@@ -943,3 +943,27 @@ background:#1e293b;
     .dark .chart-card{
     background:#1e293b;
     }
+    #budgetContainer{
+        display:grid;
+        grid-template-columns:
+        repeat(4,1fr);
+        gap:20px;
+    }
+    @media(max-width:768px){
+
+        #budgetContainer{
+            grid-template-columns:1fr;
+        }
+        
+        }
+        @media(max-width:768px){
+
+            #budgetContainer{
+                grid-template-columns:1fr;
+            }
+            
+            }
+
+            .dark .budget-card{
+                background:#1e293b;
+            }
