@@ -120,11 +120,10 @@ async function saveTransaction(e){
  );
 
  transactionForm.reset();
-
  loadDashboard();
 
 }
-
+const currentMonthLabel =
 async function loadDashboard(){
 
  let income=0;
@@ -141,6 +140,16 @@ async function loadDashboard(){
  
  const currentYear =
  new Date().getFullYear();
+ 
+ const currentMonthLabel =
+ new Date().toLocaleString(
+  "default",
+  {
+   month:"long",
+   year:"numeric"
+  }
+ );
+
  const snapshot =
  await getDocs(
  collection(
@@ -236,7 +245,8 @@ async function loadDashboard(){
    );
    
    renderBudgets(
-    categoryTotals
+    categoryTotals,
+    currentMonthLabel
    );
    
    loadGoalsWidget();
@@ -370,10 +380,10 @@ function renderRecentTransactions(
  });
 
 }
-
 function renderBudgets(
- categoryTotals
-){
+    categoryTotals,
+    currentMonthLabel
+   ){
 
  const container =
  document.getElementById(
@@ -381,7 +391,17 @@ function renderBudgets(
  );
 
  if(!container) return;
-
+ const budgetTitle =
+ document.getElementById(
+  "budgetTitle"
+ );
+ 
+ if(budgetTitle){
+ 
+  budgetTitle.innerText =
+  `📅 Monthly Budget Tracker (${currentMonthLabel})`;
+ 
+ }
  container.innerHTML="";
 
  Object.keys(budgets)
@@ -411,9 +431,13 @@ function renderBudgets(
 
  <div class="budget-card">
 
- <h4>
- ${category}
- </h4>
+<h4>
+${category}
+</h4>
+
+<small class="budget-month">
+${currentMonthLabel}
+</small>
 
 <p>
 
