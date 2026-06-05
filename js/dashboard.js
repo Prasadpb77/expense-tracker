@@ -123,7 +123,6 @@ async function saveTransaction(e){
  loadDashboard();
 
 }
-const currentMonthLabel =
 async function loadDashboard(){
 
  let income=0;
