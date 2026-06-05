@@ -1441,3 +1441,20 @@ background:#1e293b;
   .chart-card canvas {
     max-height: 300px;
   }
+/* Reset canvas and chart containers */
+canvas {
+    box-shadow: none !important;
+    transform: none !important;
+    border-radius: 0 !important;
+  }
+  
+  /* Remove glow/shadow from chart parent cards */
+  .chart-card {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* light 2D shadow */
+    transform: none;
+  }
+  
+  /* Optional: make bar and pie charts flat colors */
+  .chartjs-render-monitor {
+    background: transparent !important;
+  }
