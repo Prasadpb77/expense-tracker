@@ -2,19 +2,13 @@
 <html lang="en">
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Reports</title>
-
 <link rel="stylesheet" href="css/style.css">
 <link rel="manifest" href="manifest.json">
-
 <meta name="theme-color" content="#4f46e5">
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 </head>
 
 <body>
@@ -22,113 +16,74 @@
 <div class="layout">
 
 <aside class="sidebar">
-
 <h2>💰 Finance</h2>
-
 <ul>
-
-<li>
-<a href="dashboard.html">🏠 Dashboard</a>
-</li>
-
-<li>
-<a href="transactions.html">💸 Transactions</a>
-</li>
-
-<li class="active">
-<a href="reports.html">📊 Reports</a>
-</li>
-
-<li>
-<a href="budgets.html">💳 Budgets</a>
-</li>
-
-<li>
-<a href="goals.html">🎯 Goals</a>
-</li>
-<li>
-    <a href="investment.html">
-    💰 Investments
-    </a>
-</li>
-
+<li><a href="dashboard.html">🏠 Dashboard</a></li>
+<li><a href="transactions.html">💸 Transactions</a></li>
+<li class="active"><a href="reports.html">📊 Reports</a></li>
+<li><a href="budgets.html">💳 Budgets</a></li>
+<li><a href="goals.html">🎯 Goals</a></li>
+<li><a href="investment.html">💰 Investments</a></li>
 </ul>
-
 </aside>
 
 <main>
-
 <h1>📊 Monthly Reports</h1>
 
+<!-- Month Filter -->
 <div class="report-filter">
-
+<label for="monthFilter">Filter by Month:</label>
 <select id="monthFilter">
-
-<option value="all">
-All Time
-</option>
-
+<option value="all">All Time</option>
 </select>
-
 </div>
 
+<!-- Summary Widgets -->
 <div class="cards">
-
 <div class="card income-card">
 <h3>Income</h3>
 <h2 id="reportIncome">₹0</h2>
 </div>
-
 <div class="card expense-card">
 <h3>Expense</h3>
 <h2 id="reportExpense">₹0</h2>
 </div>
-
 <div class="card balance-card">
 <h3>Savings</h3>
 <h2 id="reportSavings">₹0</h2>
 </div>
-
 </div>
 
+<!-- Charts -->
 <div class="charts">
-
 <div class="chart-card">
-
-<h3>Expense Categories</h3>
-
+<h3>Category-wise Expenses</h3>
 <canvas id="categoryChart"></canvas>
-
 </div>
-
 <div class="chart-card">
-
-<h3>Member Spending</h3>
-
+<h3>Member-wise Expenses</h3>
 <canvas id="memberChart"></canvas>
-
+</div>
 </div>
 
-</div>
-
-<div class="chart-card">
-
-<h3>Monthly Expense Trend</h3>
-
-<canvas id="monthlyTrendChart"></canvas>
-
+<!-- Tabular Report -->
+<div class="report-tables">
+<h2>Expenses Table</h2>
+<table class="report-table">
+<thead>
+<tr>
+<th>Category</th>
+<th>Total Amount</th>
+</tr>
+</thead>
+<tbody id="reportTableBody"></tbody>
+</table>
 </div>
 
 </main>
-
 </div>
 
-<script type="module"
-src="js/reports.js">
-</script>
-
+<script type="module" src="js/reports.js"></script>
 <script src="js/pwa.js"></script>
-
 </body>
-
 </html>

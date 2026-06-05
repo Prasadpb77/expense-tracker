@@ -1,103 +1,98 @@
 import { db } from "./firebase-config.js";
 import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
-const monthFilter = document.getElementById("monthFilter");
-const reportIncomeEl = document.getElementById("reportIncome");
-const reportExpenseEl = document.getElementById("reportExpense");
-const reportSavingsEl = document.getElementById("reportSavings");
+const reportIncome = document.getElementById("reportIncome");
+const reportExpense = document.getElementById("reportExpense");
+const reportSavings = document.getElementById("reportSavings");
 
 const categoryChartCtx = document.getElementById("categoryChart");
 const memberChartCtx = document.getElementById("memberChart");
-const monthlyTrendCtx = document.getElementById("monthlyTrendChart");
+const reportTableBody = document.getElementById("reportTableBody");
+
+const monthFilter = document.getElementById("monthFilter");
 
 let transactions = [];
-let categoryChart, memberChart, monthlyTrendChart;
-
-// Populate month dropdown
-const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-monthNames.forEach((m,i)=>{
-    monthFilter.innerHTML += `<option value="${i}">${m}</option>`;
-});
+let categoryChart, memberChart;
 
 async function loadReports() {
     const snapshot = await getDocs(collection(db, "transactions"));
     transactions = snapshot.docs.map(d => ({ id: d.id, ...d.data(), date: d.data().createdAt?.toDate?.() || new Date(d.data().createdAt) }));
 
-    renderReport();
-}
-
-function renderReport() {
-    const selectedMonth = monthFilter.value;
-
-    let filtered = transactions;
-    if(selectedMonth !== "all") {
-        filtered = transactions.filter(t => t.date.getMonth() == selectedMonth);
-    }
-
-    let income = 0, expense = 0;
-    const categoryTotals = {};
-    const memberTotals = {};
-    const monthlyTotals = Array(12).fill(0);
-
-    filtered.forEach(t => {
-        if(t.type === "Income") income += t.amount;
-        if(t.type === "Expense") {
-            expense += t.amount;
-            categoryTotals[t.category] = (categoryTotals[t.category] || 0) + t.amount;
-            memberTotals[t.member] = (memberTotals[t.member] || 0) + t.amount;
-        }
-        const m = t.date.getMonth();
-        monthlyTotals[m] += t.amount;
+    // Fill month filter dynamically
+    const months = [...new Set(transactions.map(t => t.date.getMonth()))];
+    const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    months.forEach(m => {
+        if(!Array.from(monthFilter.options).some(o=>Number(o.value)===m))
+            monthFilter.innerHTML += `<option value="${m}">${monthNames[m]}</option>`;
     });
 
-    reportIncomeEl.innerText = "₹" + income.toLocaleString();
-    reportExpenseEl.innerText = "₹" + expense.toLocaleString();
-    reportSavingsEl.innerText = "₹" + (income - expense).toLocaleString();
+    renderReports();
+}
 
-    // Category Chart
+function renderReports() {
+    const selectedMonth = monthFilter.value;
+    const filtered = transactions.filter(t => t.type === "Expense" && (selectedMonth==="all" || t.date.getMonth() === Number(selectedMonth)));
+
+    const incomeTotal = transactions.filter(t => t.type==="Income").reduce((sum,t)=>sum+t.amount,0);
+    const expenseTotal = filtered.reduce((sum,t)=>sum+t.amount,0);
+    const savings = incomeTotal - expenseTotal;
+
+    reportIncome.innerText = "₹"+incomeTotal.toLocaleString();
+    reportExpense.innerText = "₹"+expenseTotal.toLocaleString();
+    reportSavings.innerText = "₹"+savings.toLocaleString();
+
+    // Category-wise totals
+    const categoryTotals = {};
+    filtered.forEach(t=>{
+        categoryTotals[t.category] = (categoryTotals[t.category]||0)+t.amount;
+    });
+
+    // Member-wise totals
+    const memberTotals = {};
+    filtered.forEach(t=>{
+        memberTotals[t.member] = (memberTotals[t.member]||0)+t.amount;
+    });
+
+    // Render Charts
     if(categoryChart) categoryChart.destroy();
     categoryChart = new Chart(categoryChartCtx, {
-        type: "pie",
-        data: {
-            labels: Object.keys(categoryTotals),
-            datasets: [{
-                data: Object.values(categoryTotals),
-                backgroundColor: ["#4f46e5","#6366f1","#818cf8","#f472b6","#f59e0b","#22c55e","#14b8a6","#06b6d4"]
+        type:"bar",
+        data:{
+            labels:Object.keys(categoryTotals),
+            datasets:[{
+                label:"Expenses",
+                data:Object.values(categoryTotals),
+                backgroundColor: ["#4f46e5","#6366f1","#818cf8","#f472b6","#f59e0b","#22c55e","#16a34a","#f97316","#facc15"]
             }]
-        }
+        },
+        options:{plugins:{legend:{display:false}}, responsive:true, maintainAspectRatio:false}
     });
 
-    // Member Chart
     if(memberChart) memberChart.destroy();
     memberChart = new Chart(memberChartCtx, {
-        type: "doughnut",
-        data: {
-            labels: Object.keys(memberTotals),
-            datasets: [{
-                data: Object.values(memberTotals),
-                backgroundColor: ["#4ade80","#22c55e","#16a34a","#f472b6","#f59e0b"]
+        type:"pie",
+        data:{
+            labels:Object.keys(memberTotals),
+            datasets:[{
+                data:Object.values(memberTotals),
+                backgroundColor:["#4f46e5","#6366f1","#818cf8","#f472b6","#f59e0b","#22c55e"]
             }]
-        }
+        },
+        options:{plugins:{legend:{position:"bottom"}}, responsive:true, maintainAspectRatio:false}
     });
 
-    // Monthly Trend Chart
-    if(monthlyTrendChart) monthlyTrendChart.destroy();
-    monthlyTrendChart = new Chart(monthlyTrendCtx, {
-        type: "line",
-        data: {
-            labels: monthNames,
-            datasets: [{
-                label: "Expense Trend",
-                data: monthlyTotals,
-                borderColor: "#4f46e5",
-                backgroundColor: "#c4b5fd88",
-                fill: true,
-                tension: 0.3
-            }]
-        }
+    // Render table
+    reportTableBody.innerHTML = "";
+    Object.keys(categoryTotals).forEach(cat=>{
+        reportTableBody.innerHTML += `
+            <tr>
+                <td>${cat}</td>
+                <td>₹${categoryTotals[cat].toLocaleString()}</td>
+            </tr>
+        `;
     });
 }
 
-monthFilter.addEventListener("change", renderReport);
+monthFilter.addEventListener("change", renderReports);
 
 loadReports();
