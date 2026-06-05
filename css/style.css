@@ -1411,3 +1411,33 @@ background:#1e293b;
       padding: 20px;
     }
   }
+  .investment-tables {
+    padding: 20px;
+    max-width: 1200px;
+    margin: auto;
+  }
+  
+  .report-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+  }
+  
+  .report-table th, .report-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .report-table th {
+    background-color: #4f46e5;
+    color: white;
+    text-align: left;
+  }
+  
+  .report-table td {
+    background-color: #f3f4f6;
+  }
+  
+  .chart-card canvas {
+    max-height: 300px;
+  }
