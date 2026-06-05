@@ -136,6 +136,11 @@ async function loadDashboard(){
 
  const transactions=[];
 
+ const currentMonth =
+ new Date().getMonth();
+ 
+ const currentYear =
+ new Date().getFullYear();
  const snapshot =
  await getDocs(
  collection(
@@ -146,49 +151,60 @@ async function loadDashboard(){
 
  snapshot.forEach(doc=>{
 
- const data=
- doc.data();
-
- transactions.push({
-
-  id:doc.id,
-  ...data
-
- });
-
- if(data.type==="Income"){
-
-  income += data.amount;
-
- }
-
- if(data.type==="Expense"){
-
-  expense += data.amount;
-
-  categoryTotals[
-   data.category
-  ] =
-  (
-   categoryTotals[
-    data.category
-   ] || 0
-  )
-  + data.amount;
-
-  memberTotals[
-   data.member
-  ] =
-  (
-   memberTotals[
-    data.member
-   ] || 0
-  )
-  + data.amount;
-
- }
-
- });
+    const data =
+    doc.data();
+   
+    transactions.push({
+   
+     id: doc.id,
+     ...data
+   
+    });
+   
+    if(data.type === "Income"){
+   
+     income += data.amount;
+   
+    }
+   
+    if(data.type === "Expense"){
+   
+     expense += data.amount;
+   
+     memberTotals[
+      data.member
+     ] =
+     (
+      memberTotals[
+       data.member
+      ] || 0
+     )
+     + data.amount;
+   
+     const txDate =
+     data.createdAt?.toDate();
+   
+     if(
+      txDate &&
+      txDate.getMonth() === currentMonth &&
+      txDate.getFullYear() === currentYear
+     ){
+   
+      categoryTotals[
+       data.category
+      ] =
+      (
+       categoryTotals[
+        data.category
+       ] || 0
+      )
+      + data.amount;
+   
+     }
+   
+    }
+   
+   });
 
  document.getElementById(
  "incomeTotal"
@@ -399,23 +415,41 @@ function renderBudgets(
  ${category}
  </h4>
 
- <p>
+<p>
 
- ₹${spent}
+₹${spent.toLocaleString()}
 
- /
+/
 
- ₹${budget}
+₹${budget.toLocaleString()}
 
- </p>
+</p>
+
+<small>
+
+Remaining:
+₹${Math.max(
+ budget-spent,
+ 0
+).toLocaleString()}
+
+</small>
 
  <div class="budget-bar">
 
- <div
+<div
  class="budget-fill"
  style="
- width:${percent}%">
- </div>
+ width:${percent}%;
+ background:${
+  percent >= 100
+  ? '#ef4444'
+  : percent >= 80
+  ? '#f59e0b'
+  : '#10b981'
+ };
+ ">
+</div>
 
  </div>
 
