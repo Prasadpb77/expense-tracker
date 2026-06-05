@@ -1057,3 +1057,61 @@ background:#1e293b;
 .transaction-table select {
     cursor: pointer;
 }
+/* Transaction Table Buttons & Inputs */
+.transaction-table .btn {
+    padding: 4px 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-right: 4px;
+    transition: all 0.2s ease;
+}
+
+/* Save Button */
+.transaction-table .save-btn {
+    background-color: #10b981; /* Green */
+    color: #fff;
+}
+
+.transaction-table .save-btn:hover {
+    background-color: #059669;
+}
+
+/* Cancel Button */
+.transaction-table .cancel-btn {
+    background-color: #f59e0b; /* Amber */
+    color: #fff;
+}
+
+.transaction-table .cancel-btn:hover {
+    background-color: #d97706;
+}
+
+/* Delete Button */
+.transaction-table .delete-btn {
+    background-color: #ef4444; /* Red */
+    color: #fff;
+}
+
+.transaction-table .delete-btn:hover {
+    background-color: #b91c1c;
+}
+
+/* Edit dropdowns and input fields */
+.transaction-table input[type="number"],
+.transaction-table input[type="text"],
+.transaction-table select {
+    width: 100%;
+    padding: 3px 6px;
+    font-size: 0.85rem;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Optional: align buttons and inputs vertically */
+.transaction-table td {
+    vertical-align: middle;
+}
