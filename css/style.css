@@ -1668,3 +1668,82 @@ canvas {
       flex-direction: column;
     }
   }
+  /* Dark Mode Overrides */
+body.dark {
+    background-color: #0f172a;
+    color: #f8fafc;
+}
+
+/* Sidebar */
+body.dark .sidebar {
+    background-color: #1e293b;
+    color: #f8fafc;
+}
+
+body.dark .sidebar a {
+    color: #f8fafc;
+}
+
+body.dark .sidebar a.active {
+    background-color: #4f46e5;
+    color: #ffffff;
+}
+
+/* Cards */
+body.dark .cards .card {
+    background-color: #1e293b;
+    color: #f8fafc;
+    border: 1px solid #334155;
+}
+
+/* Budget Tracker Cards */
+body.dark .budget-card {
+    background-color: #1e293b;
+    color: #f8fafc;
+    border: 1px solid #334155;
+}
+
+body.dark .budget-bar {
+    background-color: #334155;
+}
+
+body.dark .budget-fill {
+    opacity: 0.9;
+}
+
+/* Tables */
+body.dark table.report-table {
+    background-color: #1e293b;
+    color: #f8fafc;
+}
+
+body.dark table.report-table th,
+body.dark table.report-table td {
+    border-color: #334155;
+    color: #f8fafc;
+}
+
+/* Inputs / Selects */
+body.dark input,
+body.dark select,
+body.dark textarea {
+    background-color: #1e293b;
+    color: #f8fafc;
+    border: 1px solid #334155;
+}
+
+/* Buttons */
+body.dark button {
+    background-color: #4f46e5;
+    color: #fff;
+    border: none;
+}
+
+body.dark button.delete-btn {
+    background-color: #ef4444;
+}
+
+/* Charts - optional: improve contrast */
+body.dark canvas {
+    background-color: transparent !important;
+}
