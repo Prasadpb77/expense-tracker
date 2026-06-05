@@ -21,20 +21,34 @@
 <li onclick="location.href='goals.html'">Goals</li>
 <li class="active">Investments</li>
 <li onclick="location.href='reports.html'">Reports</li>
-<li onclick="location.href='budgets.html'">Reports</li>
+<li onclick="location.href='budgets.html'">Budgets</li>
 </ul>
 </aside>
 
 <main>
 <h1>📈 Investment Reports</h1>
 
+<!-- Summary Widgets -->
 <div class="cards">
   <div class="card income-card">
-    <h3>Total Investment</h3>
+    <h3>Total Lifetime Investment</h3>
     <h2 id="totalInvestment">₹0</h2>
+  </div>
+  <div class="card income-card">
+    <h3>Total Investment Current Year</h3>
+    <h2 id="yearInvestment">₹0</h2>
+  </div>
+  <div class="card income-card">
+    <h3>Average Monthly Investment</h3>
+    <h2 id="avgMonthlyInvestment">₹0</h2>
+  </div>
+  <div class="card income-card">
+    <h3>Top Investment Month</h3>
+    <h2 id="topMonth">N/A</h2>
   </div>
 </div>
 
+<!-- Charts -->
 <div class="charts">
   <div class="chart-card">
     <h3>Monthly Investment (Current Year)</h3>
