@@ -4,16 +4,16 @@ import {
   getDocs,
   deleteDoc,
   doc,
-  updateDoc,
+  updateDoc
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 const tableBody = document.getElementById("transactionBody");
-
 const searchBox = document.getElementById("searchBox");
 const filterType = document.getElementById("filterType");
 
 let transactions = [];
 
+const members = ["Prasad", "Bhagyashree", "Common"];
 const categories = [
   "Salary",
   "Food",
@@ -59,7 +59,13 @@ function renderTable() {
 
     row.innerHTML = `
       <td>${item.createdAt?.toDate().toLocaleDateString()}</td>
-      <td>${item.member}</td>
+      <td>
+        <select class="edit-member">
+          ${members.map(
+            (m) => `<option value="${m}" ${item.member === m ? "selected" : ""}>${m}</option>`
+          ).join("")}
+        </select>
+      </td>
       <td>
         <select class="edit-type">
           <option value="Income" ${item.type === "Income" ? "selected" : ""}>Income</option>
@@ -68,18 +74,13 @@ function renderTable() {
       </td>
       <td>
         <select class="edit-category">
-          ${categories
-            .map(
-              (cat) =>
-                `<option value="${cat}" ${
-                  item.category === cat ? "selected" : ""
-                }>${cat}</option>`
-            )
-            .join("")}
+          ${categories.map(
+            (cat) => `<option value="${cat}" ${item.category === cat ? "selected" : ""}>${cat}</option>`
+          ).join("")}
         </select>
       </td>
       <td><input type="number" class="edit-amount" value="${item.amount}"></td>
-      <td><input type="text" class="edit-description" value="${item.description}"></td>
+      <td><input type="text" class="edit-description" value="${item.description || ""}"></td>
       <td>
         <button class="btn save-btn">Save</button>
         <button class="btn cancel-btn">Cancel</button>
@@ -91,28 +92,30 @@ function renderTable() {
     const cancelBtn = row.querySelector(".cancel-btn");
     const deleteBtn = row.querySelector(".delete-btn");
 
+    const memberSelect = row.querySelector(".edit-member");
     const typeSelect = row.querySelector(".edit-type");
     const categorySelect = row.querySelector(".edit-category");
     const amountInput = row.querySelector(".edit-amount");
     const descInput = row.querySelector(".edit-description");
 
-    // Save changes
     saveBtn.addEventListener("click", async () => {
+      if (!memberSelect.value || !categorySelect.value || !amountInput.value) {
+        return alert("Please fill all required fields");
+      }
+
       await updateDoc(doc(db, "transactions", item.id), {
+        member: memberSelect.value,
         type: typeSelect.value,
         category: categorySelect.value,
         amount: Number(amountInput.value),
-        description: descInput.value,
+        description: descInput.value
       });
+
       loadTransactions();
     });
 
-    // Cancel changes
-    cancelBtn.addEventListener("click", () => {
-      renderTable();
-    });
+    cancelBtn.addEventListener("click", () => loadTransactions());
 
-    // Delete transaction
     deleteBtn.addEventListener("click", async () => {
       if (!confirm("Delete Transaction?")) return;
       await deleteDoc(doc(db, "transactions", item.id));
