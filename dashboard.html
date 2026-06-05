@@ -27,27 +27,18 @@
 </aside>
 
 <main>
-        <!-- Header -->
+  <div>
 
-        <div class="topbar">
+    <h1>
+        Prasad ❤️ Bhagyashree
+    </h1>
 
-            <div>
+    <p>
+        Couple Finance Manager
+    </p>
 
-                <h1>
-                    Prasad ❤️ Bhagyashree
-                </h1>
+</div>
 
-                <p>
-                    Couple Finance Manager
-                </p>
-
-            </div>
-
-            <!-- <button id="themeToggle">
-                🌙
-            </button> -->
-
-        </div>
 <!-- Month Filter -->
 <div class="month-filter-container">
 <label for="monthFilter">Filter by Month:</label>
@@ -70,6 +61,49 @@
     <h3>Balance</h3>
     <h2 id="balanceTotal">₹0</h2>
   </div>
+</div>
+
+<!-- Add Transaction Section -->
+<div class="add-section">
+<h2>Add Transaction</h2>
+<form id="transactionForm">
+  <select id="member">
+    <option>Prasad</option>
+    <option>Bhagyashree</option>
+    <option>Comman</option>
+    <option>Credit Card</option>
+  </select>
+
+  <select id="type">
+    <option>Income</option>
+    <option>Expense</option>
+  </select>
+
+  <select id="category">
+    <option>Salary</option>
+    <option>Food</option>
+    <option>Fuel</option>
+    <option>Travel</option>
+    <option>Shopping</option>
+    <option>Bills</option>
+    <option>EMI</option>
+    <option>Medical</option>
+    <option>Entertainment</option>
+    <option>Investment</option>
+    <option>Family Contribution</option>
+    <option>Grocerry</option>
+    <option>Fruits & DryFruits</option>
+    <option>Vegetables</option>
+    <option>Gifts</option>
+    <option>RD(Goals)</option>
+    <option>Other</option>
+  </select>
+
+  <input type="number" id="amount" placeholder="Amount" required>
+  <input type="text" id="description" placeholder="Description">
+
+  <button type="submit">Save Transaction</button>
+</form>
 </div>
 
 <!-- Charts -->
@@ -100,6 +134,9 @@
 <!-- Goals -->
 <h2>Goals</h2>
 <div id="dashboardGoals"></div>
+
+<!-- Theme Toggle -->
+<button id="themeToggle" class="theme-btn">🌙 Dark Mode</button>
 
 </main>
 </div>
