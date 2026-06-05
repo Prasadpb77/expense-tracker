@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,9 +9,7 @@
 <meta name="theme-color" content="#4f46e5">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-
 <body>
-
 <div class="layout">
 
 <aside class="sidebar">
@@ -32,13 +29,12 @@
 
 <!-- Month Filter -->
 <div class="report-filter">
-<label for="monthFilter">Filter by Month:</label>
 <select id="monthFilter">
 <option value="all">All Time</option>
 </select>
 </div>
 
-<!-- Summary Widgets -->
+<!-- Summary Cards -->
 <div class="cards">
 <div class="card income-card">
 <h3>Income</h3>
@@ -57,27 +53,47 @@
 <!-- Charts -->
 <div class="charts">
 <div class="chart-card">
-<h3>Category-wise Expenses</h3>
+<h3>Expense Categories</h3>
 <canvas id="categoryChart"></canvas>
 </div>
 <div class="chart-card">
-<h3>Member-wise Expenses</h3>
+<h3>Member Spending</h3>
 <canvas id="memberChart"></canvas>
 </div>
 </div>
 
-<!-- Tabular Report -->
+<div class="chart-card">
+<h3>Monthly Expense Trend</h3>
+<canvas id="monthlyTrendChart"></canvas>
+</div>
+
+<!-- Tables -->
 <div class="report-tables">
-<h2>Expenses Table</h2>
+
+<h2>Monthly Expenses</h2>
 <table class="report-table">
 <thead>
-<tr>
-<th>Category</th>
-<th>Total Amount</th>
-</tr>
+<tr><th>Category</th><th>Total</th><th>Transactions / Description</th></tr>
 </thead>
-<tbody id="reportTableBody"></tbody>
+<tbody id="monthlyTableBody"></tbody>
 </table>
+
+<h2>Yearly Expenses</h2>
+<table class="report-table">
+<thead>
+<tr><th>Year</th><th>Total</th><th>Transactions / Description</th></tr>
+</thead>
+<tbody id="yearlyTableBody"></tbody>
+</table>
+
+<h2>Member-wise Expenses</h2>
+<table class="report-table">
+<thead>
+<tr><th>Member</th><th>Total</th><th>Transactions / Description</th></tr>
+</thead>
+<tbody id="memberTableBody"></tbody>
+</table>
+
 </div>
 
 </main>
