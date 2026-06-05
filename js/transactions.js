@@ -45,49 +45,83 @@ function renderTable() {
     row.innerHTML = `
       <td>${item.createdAt?.toDate().toLocaleDateString()}</td>
       <td>${item.member}</td>
-      <td>${item.type}</td>
-      <td>${item.category}</td>
-      <td>₹${item.amount}</td>
-      <td>${item.description}</td>
-      <td>
-        <button class="btn edit-btn" onclick="editTransaction('${item.id}')">Edit</button>
-        <button class="btn delete-btn" onclick="deleteTransaction('${item.id}')">Delete</button>
+      <td class="editable-type">${item.type}</td>
+      <td class="editable-category">${item.category}</td>
+      <td class="editable-amount">₹${item.amount}</td>
+      <td class="editable-desc">${item.description || ""}</td>
+      <td class="actions">
+        <button class="btn edit-btn">Edit</button>
+        <button class="btn delete-btn">Delete</button>
       </td>
     `;
+
+    const editBtn = row.querySelector(".edit-btn");
+    const deleteBtn = row.querySelector(".delete-btn");
+
+    deleteBtn.addEventListener("click", async () => {
+      if (!confirm("Delete Transaction?")) return;
+      await deleteDoc(doc(db, "transactions", item.id));
+      loadTransactions();
+    });
+
+    editBtn.addEventListener("click", () => enableInlineEdit(row, item));
 
     tableBody.appendChild(row);
   });
 }
 
-window.deleteTransaction = async function (id) {
-  if (!confirm("Delete Transaction?")) return;
-  await deleteDoc(doc(db, "transactions", id));
-  loadTransactions();
-};
+// Enable inline edit for a row
+function enableInlineEdit(row, item) {
+  const typeCell = row.querySelector(".editable-type");
+  const categoryCell = row.querySelector(".editable-category");
+  const amountCell = row.querySelector(".editable-amount");
+  const descCell = row.querySelector(".editable-desc");
+  const actionsCell = row.querySelector(".actions");
 
-window.editTransaction = async function (id) {
-  const transaction = transactions.find(t => t.id === id);
-  if (!transaction) return;
+  // Replace content with inputs
+  typeCell.innerHTML = `
+    <select class="edit-type">
+      <option ${item.type === "Income" ? "selected" : ""}>Income</option>
+      <option ${item.type === "Expense" ? "selected" : ""}>Expense</option>
+    </select>
+  `;
+  categoryCell.innerHTML = `<input type="text" class="edit-category" value="${item.category}">`;
+  amountCell.innerHTML = `<input type="number" class="edit-amount" value="${item.amount}">`;
+  descCell.innerHTML = `<input type="text" class="edit-desc" value="${item.description || ""}">`;
 
-  const newAmount = Number(prompt("Enter new amount:", transaction.amount));
-  if (isNaN(newAmount) || newAmount <= 0) return alert("Invalid amount!");
+  actionsCell.innerHTML = `
+    <button class="btn save-btn">Save</button>
+    <button class="btn cancel-btn">Cancel</button>
+  `;
 
-  const newType = prompt("Enter new type (Income/Expense):", transaction.type);
-  if (newType !== "Income" && newType !== "Expense") return alert("Invalid type!");
+  const saveBtn = actionsCell.querySelector(".save-btn");
+  const cancelBtn = actionsCell.querySelector(".cancel-btn");
 
-  const newCategory = prompt("Enter new category:", transaction.category);
-  if (!newCategory) return alert("Invalid category!");
+  cancelBtn.addEventListener("click", () => loadTransactions());
 
-  await updateDoc(doc(db, "transactions", id), {
-    amount: newAmount,
-    type: newType,
-    category: newCategory
+  saveBtn.addEventListener("click", async () => {
+    const newAmount = Number(row.querySelector(".edit-amount").value);
+    const newType = row.querySelector(".edit-type").value;
+    const newCategory = row.querySelector(".edit-category").value.trim();
+    const newDesc = row.querySelector(".edit-desc").value.trim();
+
+    if (newAmount <= 0 || !newCategory) {
+      alert("Enter valid amount and category");
+      return;
+    }
+
+    await updateDoc(doc(db, "transactions", item.id), {
+      amount: newAmount,
+      type: newType,
+      category: newCategory,
+      description: newDesc
+    });
+
+    loadTransactions();
   });
+}
 
-  loadTransactions();
-};
-
-// Event listeners for search & filter
+// Search & filter
 searchBox.addEventListener("input", renderTable);
 filterType.addEventListener("change", renderTable);
 

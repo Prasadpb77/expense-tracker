@@ -995,3 +995,65 @@ background:#1e293b;
   .transaction-table .delete-btn:hover {
     background-color: #b91c1c;
   }
+  /* Transaction Table Buttons */
+.transaction-table .btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin-right: 5px;
+    transition: all 0.2s ease;
+}
+
+.transaction-table .edit-btn {
+    background-color: #6366f1; /* Indigo */
+    color: #fff;
+}
+
+.transaction-table .edit-btn:hover {
+    background-color: #4f46e5;
+}
+
+.transaction-table .save-btn {
+    background-color: #10b981; /* Green */
+    color: #fff;
+}
+
+.transaction-table .save-btn:hover {
+    background-color: #059669;
+}
+
+.transaction-table .cancel-btn {
+    background-color: #f59e0b; /* Amber */
+    color: #fff;
+}
+
+.transaction-table .cancel-btn:hover {
+    background-color: #d97706;
+}
+
+.transaction-table .delete-btn {
+    background-color: #ef4444; /* Red */
+    color: #fff;
+}
+
+.transaction-table .delete-btn:hover {
+    background-color: #b91c1c;
+}
+
+/* Input & select fields in inline edit */
+.transaction-table input[type="text"],
+.transaction-table input[type="number"],
+.transaction-table select {
+    width: 100%;
+    padding: 4px 6px;
+    font-size: 0.85rem;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+}
+
+.transaction-table select {
+    cursor: pointer;
+}
