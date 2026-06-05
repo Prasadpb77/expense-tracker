@@ -1255,3 +1255,49 @@ background:#1e293b;
         width: 100%;
     }
 }
+/* Investment Report Tables */
+.investment-tables {
+    margin-top: 30px;
+}
+
+.investment-tables h2 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    color: #4f46e5; /* Dashboard primary color */
+}
+
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 25px;
+}
+
+.report-table th,
+.report-table td {
+    border: 1px solid #d1d5db;
+    padding: 8px 10px;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.report-table th {
+    background-color: #f3f4f6;
+    color: #111827;
+}
+
+.report-table tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+.report-table tr:hover {
+    background-color: #e0e7ff; /* subtle hover effect */
+}
+
+/* Responsive for small screens */
+@media (max-width: 768px) {
+    .report-table th,
+    .report-table td {
+        padding: 6px 8px;
+        font-size: 0.85rem;
+    }
+}
