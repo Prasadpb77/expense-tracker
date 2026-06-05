@@ -16,35 +16,43 @@ const yearlyTableBody = document.getElementById("yearlyTableBody");
 const memberTableBody = document.getElementById("memberTableBody");
 
 let categoryChart, memberChart, monthlyTrendChart;
-
 let transactions = [];
 
+const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
 async function loadReports() {
+    // Fetch transactions from Firebase
     const snapshot = await getDocs(collection(db, "transactions"));
     transactions = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
 
-    populateMonthFilter();
+    populateMonthFilter();   // Dynamically create month options from Firebase
     renderReports();
 }
 
+// Dynamic month filter from Firebase
 function populateMonthFilter() {
-    const months = new Set(transactions.map(t => {
+    const monthSet = new Set();
+    transactions.forEach(t => {
         const d = t.createdAt?.toDate?.() || new Date(t.createdAt);
-        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-    }));
-    months.forEach(m => {
+        const monthStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; // e.g., "2026-06"
+        monthSet.add(monthStr);
+    });
+
+    monthFilter.innerHTML = `<option value="all">All Time</option>`; // Reset
+    Array.from(monthSet).sort().forEach(m => {
         const opt = document.createElement("option");
-        opt.value = m; opt.innerText = m;
+        opt.value = m;
+        opt.innerText = m;
         monthFilter.appendChild(opt);
     });
 }
 
+// Render charts and tables based on selected month
 function renderReports() {
     const selectedMonth = monthFilter.value;
 
-    // Filter transactions by month
     const filtered = transactions.filter(t => {
-        if(selectedMonth === "all") return true;
+        if(selectedMonth==="all") return true;
         const d = t.createdAt?.toDate?.() || new Date(t.createdAt);
         return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}` === selectedMonth;
     });
@@ -58,55 +66,48 @@ function renderReports() {
 
     // Category totals
     const categoryTotals = {};
-    filtered.forEach(t => {
-        if(t.type==="Expense") {
-            categoryTotals[t.category] = (categoryTotals[t.category]||0)+t.amount;
-        }
-    });
+    filtered.forEach(t => { if(t.type==="Expense") categoryTotals[t.category]=(categoryTotals[t.category]||0)+t.amount; });
 
     // Member totals
     const memberTotals = {};
-    filtered.forEach(t => {
-        if(t.type==="Expense") {
-            memberTotals[t.member] = (memberTotals[t.member]||0)+t.amount;
-        }
-    });
+    filtered.forEach(t => { if(t.type==="Expense") memberTotals[t.member]=(memberTotals[t.member]||0)+t.amount; });
 
-    // Monthly trend (per month)
+    // Monthly trend (line chart)
     const monthlyTrend = Array(12).fill(0);
-    const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    filtered.forEach(t=>{
+    filtered.forEach(t => {
         const d = t.createdAt?.toDate?.() || new Date(t.createdAt);
         if(d.getFullYear() === new Date().getFullYear()) monthlyTrend[d.getMonth()] += t.amount;
     });
 
     // Charts
     if(categoryChart) categoryChart.destroy();
-    categoryChart = new Chart(categoryCtx,{ type:"bar", data:{
-        labels: Object.keys(categoryTotals),
-        datasets:[{ label:"Expense", data:Object.values(categoryTotals), backgroundColor:"#6366f1" }]
-    }});
+    categoryChart = new Chart(categoryCtx, {
+        type:"bar",
+        data:{ labels:Object.keys(categoryTotals), datasets:[{ label:"Expense", data:Object.values(categoryTotals), backgroundColor:"#6366f1" }] },
+        options:{ plugins:{ legend:{ display:false } }, responsive:true, maintainAspectRatio:false }
+    });
 
     if(memberChart) memberChart.destroy();
-    memberChart = new Chart(memberCtx,{ type:"pie", data:{
-        labels:Object.keys(memberTotals),
-        datasets:[{ data:Object.values(memberTotals), backgroundColor:["#4f46e5","#6366f1","#818cf8","#f472b6","#f59e0b"] }]
-    }});
+    memberChart = new Chart(memberCtx, {
+        type:"pie",
+        data:{ labels:Object.keys(memberTotals), datasets:[{ data:Object.values(memberTotals), backgroundColor:["#4f46e5","#6366f1","#818cf8","#f472b6","#f59e0b"] }] },
+        options:{ plugins:{ legend:{ position:"bottom" } }, responsive:true, maintainAspectRatio:false }
+    });
 
     if(monthlyTrendChart) monthlyTrendChart.destroy();
-    monthlyTrendChart = new Chart(monthlyTrendCtx,{ type:"line", data:{
-        labels: monthNames,
-        datasets:[{ label:"Expense Trend", data:monthlyTrend, borderColor:"#4ade80", backgroundColor:"#4ade80" }]
-    }});
+    monthlyTrendChart = new Chart(monthlyTrendCtx, {
+        type:"line",
+        data:{ labels: monthNames, datasets:[{ label:"Expense Trend", data:monthlyTrend, borderColor:"#4ade80", backgroundColor:"#4ade80" }] },
+        options:{ responsive:true, maintainAspectRatio:false }
+    });
 
-    // Tables
-    renderMonthlyTable(filtered, monthNames);
+    renderMonthlyTable(filtered);
     renderYearlyTable(filtered);
     renderMemberTable(filtered);
 }
 
-// Monthly table
-function renderMonthlyTable(filtered, monthNames){
+// Tables without descriptions
+function renderMonthlyTable(filtered){
     monthlyTableBody.innerHTML = "";
     monthNames.forEach((m,i)=>{
         const monthTransactions = filtered.filter(t=>{
@@ -116,41 +117,34 @@ function renderMonthlyTable(filtered, monthNames){
         const categories = {};
         monthTransactions.forEach(t=>{ if(t.type==="Expense") categories[t.category]=(categories[t.category]||0)+t.amount; });
         Object.keys(categories).forEach(cat=>{
-            const desc = monthTransactions.filter(t=>t.category===cat).map(t=>t.description||"-").join(", ");
-            monthlyTableBody.innerHTML += `<tr><td>${cat}</td><td>₹${categories[cat].toLocaleString()}</td><td>${desc}</td></tr>`;
+            monthlyTableBody.innerHTML += `<tr><td>${cat}</td><td>₹${categories[cat].toLocaleString()}</td></tr>`;
         });
     });
 }
 
-// Yearly table
 function renderYearlyTable(filtered){
     yearlyTableBody.innerHTML="";
     const yearly = {};
     filtered.forEach(t=>{
-        const y = (t.createdAt?.toDate?.()||new Date(t.createdAt)).getFullYear();
+        const y = (t.createdAt?.toDate?.() || new Date(t.createdAt)).getFullYear();
         if(t.type==="Expense") yearly[y]=(yearly[y]||0)+t.amount;
     });
     Object.keys(yearly).sort().forEach(y=>{
-        const desc = filtered.filter(t=>((t.createdAt?.toDate?.()||new Date(t.createdAt)).getFullYear()===Number(y))&&t.type==="Expense").map(t=>t.description||"-").join(", ");
-        yearlyTableBody.innerHTML+=`<tr><td>${y}</td><td>₹${yearly[y].toLocaleString()}</td><td>${desc}</td></tr>`;
+        yearlyTableBody.innerHTML+=`<tr><td>${y}</td><td>₹${yearly[y].toLocaleString()}</td></tr>`;
     });
 }
 
-// Member-wise table
 function renderMemberTable(filtered){
     memberTableBody.innerHTML="";
     const members = {};
     filtered.forEach(t=>{
-        if(t.type==="Expense") members[t.member]=(members[t.member]||[]).concat(t);
+        if(t.type==="Expense") members[t.member]=(members[t.member]||0)+t.amount;
     });
     Object.keys(members).forEach(member=>{
-        const total = members[member].reduce((sum,t)=>sum+t.amount,0);
-        const desc = members[member].map(t=>t.description||"-").join(", ");
-        memberTableBody.innerHTML+=`<tr><td>${member}</td><td>₹${total.toLocaleString()}</td><td>${desc}</td></tr>`;
+        memberTableBody.innerHTML+=`<tr><td>${member}</td><td>₹${members[member].toLocaleString()}</td></tr>`;
     });
 }
 
-// Filter
 monthFilter.addEventListener("change", renderReports);
 
 loadReports();
