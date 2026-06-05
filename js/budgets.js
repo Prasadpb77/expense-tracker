@@ -9,6 +9,7 @@ import {
 from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 const categories = [
+
     "Food",
     "Fuel",
     "Travel",
@@ -16,9 +17,19 @@ const categories = [
     "Bills",
     "Medical",
     "EMI",
+   
     "Entertainment",
     "Investment",
+    "Rent",
+    "Groceries",
+    "Dining",
+    "Insurance",
+    "Subscriptions",
+    "Education",
+    "Vacation",
+    "Emergency Fund",
     "Other"
+   
    ];
 async function loadBudgets(){
 
@@ -46,20 +57,29 @@ async function loadBudgets(){
 
  categories.forEach(cat=>{
 
- container.innerHTML += `
+    container.innerHTML += `
 
- <div class="budget-card">
-
- <h3>${cat}</h3>
-
- <input
- type="number"
- id="${cat}"
- value="${data[cat] || 0}">
-
- </div>
-
- `;
+    <div class="budget-card">
+    
+    <div class="budget-header">
+    
+    <h3>${cat}</h3>
+    
+    <span>
+    ₹
+    </span>
+    
+    </div>
+    
+    <input
+    class="budget-input"
+    type="number"
+    id="${cat}"
+    value="${data[cat] || 0}">
+    
+    </div>
+    
+    `;
 
  });
 
