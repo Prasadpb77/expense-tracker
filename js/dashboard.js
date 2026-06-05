@@ -5,11 +5,15 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 
 import {
-  collection,
-  addDoc,
-  getDocs,
-  Timestamp
-} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+    collection,
+    addDoc,
+    getDocs,
+    Timestamp,
+    doc,
+    getDoc
+  }
+  from
+  "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 const transactionForm =
 document.getElementById("transactionForm");
@@ -23,13 +27,7 @@ document.getElementById("themeToggle");
 let pieChart;
 let memberChart;
 
-const budgets = {
-  Food: 5000,
-  Fuel: 3000,
-  Shopping: 10000,
-  Bills: 8000,
-  Travel: 5000
-};
+let budgets = {};
 
 logoutBtn?.addEventListener(
 "click",
@@ -497,5 +495,31 @@ async function loadGoalsWidget(
  });
 
 }
+async function loadBudgets(){
 
-loadDashboard();
+    const budgetDoc =
+    await getDoc(
+     doc(
+      db,
+      "settings",
+      "budgetLimits"
+     )
+    );
+   
+    if(budgetDoc.exists()){
+   
+     budgets =
+     budgetDoc.data();
+   
+    }
+   
+   }
+   async function init(){
+
+    await loadBudgets();
+   
+    await loadDashboard();
+   
+   }
+   
+   init();
