@@ -1458,3 +1458,33 @@ canvas {
   .chartjs-render-monitor {
     background: transparent !important;
   }
+  /* Reset chart canvas effects */
+canvas {
+    box-shadow: none !important;
+    transform: none !important;
+    filter: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+}
+
+/* Optional: Ensure chart container is flat */
+.chart-card {
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1); /* subtle shadow for card, not chart itself */
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+/* Keep chart legends flat */
+.chartjs-render-monitor {
+    transform: none !important;
+    perspective: none !important;
+}
+
+/* Optional: maintain responsive width/height */
+canvas {
+    display: block;
+    width: 100% !important;
+    height: auto !important;
+}
