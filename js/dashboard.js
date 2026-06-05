@@ -497,23 +497,34 @@ async function loadGoalsWidget(
 }
 async function loadBudgets(){
 
-    const budgetDoc =
-    await getDoc(
-     doc(
-      db,
-      "settings",
-      "budgetLimits"
-     )
-    );
-   
-    if(budgetDoc.exists()){
-   
-     budgets =
-     budgetDoc.data();
-   
-    }
-   
-   }
+        try{
+       
+         const snapshot =
+         await getDocs(
+          collection(
+           db,
+           "budgetLimits"
+          )
+         );
+       
+         snapshot.forEach(docItem=>{
+       
+          budgets =
+          docItem.data();
+       
+         });
+       
+        }
+        catch(error){
+       
+         console.error(
+          "Dashboard Budget Load Error",
+          error
+         );
+       
+        }
+       
+       }
    async function init(){
 
     await loadBudgets();
