@@ -1,334 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Couple Finance Dashboard</title>
-
-    <link rel="stylesheet" href="css/style.css">
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="manifest" href="manifest.json">
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#4f46e5">
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-
 <body>
 
 <div class="layout">
 
-    <!-- Sidebar -->
-
-    <aside class="sidebar">
-
-        <h2>💰 Finance</h2>
-
-        <ul>
-
-            <li class="active">
-                <a href="dashboard.html">
-                    🏠 Dashboard
-                </a>
-            </li>
-
-            <li>
-                <a href="transactions.html">
-                    💸 Transactions
-                </a>
-            </li>
-
-            <li>
-                <a href="reports.html">
-                    📊 Reports
-                </a>
-            </li>
-
-            <li>
-                <a href="goals.html">
-                    🎯 Goals
-                </a>
-            </li>
-            <li>
-                <a href="budgets.html">
-                💳 Budgets
-                </a>
-            </li>
-            <li>
-                <a href="investment.html">
-                💰 Investments
-                </a>
-            </li>
-
-        </ul>
-
-        <button
-            id="logoutBtn"
-            class="logout-btn">
-
-            Logout
-
-        </button>
-
-    </aside>
-
-    <!-- Main Content -->
-
-    <main>
-
-        <!-- Header -->
-
-        <div class="topbar">
-
-            <div>
-
-                <h1>
-                    Prasad ❤️ Bhagyashree
-                </h1>
-
-                <p>
-                    Couple Finance Manager
-                </p>
-
-            </div>
-
-            <button id="themeToggle">
-                🌙
-            </button>
-
-        </div>
-        <!-- Summary Cards
-
-        <div class="cards">
-
-            <div class="card income-card">
-
-                <h3>Total Income</h3>
-
-                <h2 id="incomeTotal">
-                    ₹0
-                </h2>
-
-            </div>
-
-            <div class="card expense-card">
-
-                <h3>Total Expense</h3>
-
-                <h2 id="expenseTotal">
-                    ₹0
-                </h2>
-
-            </div>
-
-            <div class="card balance-card">
-
-                <h3>Balance</h3>
-
-                <h2 id="balanceTotal">
-                    ₹0
-                </h2>
-
-            </div>
-
-        </div>   -->
-        <!-- Current Month Summary -->
-        <label for="monthFilter">Month:</label>
-        <select id="monthFilter">
-            <option value="all">All Time</option>
-        </select>
-              <!-- Month options will be populated dynamically -->
-            </select>
-          </div>
-<div class="cards">
-    <div class="card income-card">
-      <h3>Income (Current Month)</h3>
-      <h2 id="incomeTotalMonth">₹0</h2>
-    </div>
-    <div class="card expense-card">
-      <h3>Expense (Current Month)</h3>
-      <h2 id="expenseTotalMonth">₹0</h2>
-    </div>
-    <div class="card balance-card">
-      <h3>Balance (Current Month)</h3>
-      <h2 id="balanceTotalMonth">₹0</h2>
-    </div>
-  </div>      
-        <!-- Add Transaction -->
-
-        <div class="add-section">
-
-            <h2>
-                Add Transaction
-            </h2>
-
-            <form id="transactionForm">
-
-                <select id="member">
-
-                    <option>
-                        Prasad
-                    </option>
-
-                    <option>
-                        Bhagyashree
-                    </option>
-
-                    <option>
-                        Common
-                    </option>
-
-                    <option>
-                        Credit Card
-                    </option>
-
-                </select>
-
-                <select id="type">
-
-                    <option>
-                        Income
-                    </option>
-
-                    <option>
-                        Expense
-                    </option>
-
-                </select>
-
-                <select id="category">
-
-                    <option>Salary</option>
-                    <option>Food</option>
-                    <option>Fuel</option>
-                    <option>Travel</option>
-                    <option>Shopping</option>
-                    <option>Bills</option>
-                    <option>EMI</option>
-                    <option>Medical</option>
-                    <option>Entertainment</option>
-                    <option>Investment</option>
-                    <option>Family Contribution</option>
-                    <option>Grocerry</option>
-                    <option>Fruits & DryFruits</option>
-                    <option>Vegetables</option>
-                    <option>Gifts</option>
-                    <option>RD(Goals)</option>
-                    <option>Other</option>
-
-                </select>
-
-                <input
-                    type="number"
-                    id="amount"
-                    placeholder="Amount"
-                    required>
-
-                <input
-                    type="text"
-                    id="description"
-                    placeholder="Description">
-
-                <button type="submit">
-                    Save Transaction
-                </button>
-
-            </form>
-
-        </div>
-        <!-- Recent Transactions -->
-
-        <div class="recent-card">
-
-            <h2>
-                Recent Transactions
-            </h2>
-
-            <table class="recent-table">
-
-                <thead>
-
-                <tr>
-
-                    <th>Date</th>
-                    <th>Member</th>
-                    <th>Category</th>
-                    <th>Amount</th>
-
-                </tr>
-
-                </thead>
-
-                <tbody id="recentTransactions">
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-        <!-- Savings Goal -->
-
-        <div id="dashboardGoals">
-
-        </div>
-
-        <!-- Budget Tracker -->
-        <div class="section-header">
-
-            <h2 id="budgetTitle">
-            📅 Monthly Budget Tracker
-            </h2>
-            
-            </div>
-        <div id="budgetContainer">
-
-        </div>
-
-        <!-- Charts -->
-
-        <div class="charts">
-
-            <div class="chart-card">
-
-                <h3>
-                    Expense Breakdown
-                </h3>
-
-                <canvas id="expenseChart">
-                </canvas>
-
-            </div>
-
-            <div class="chart-card">
-
-                <h3>
-                    Member Comparison
-                </h3>
-
-                <canvas id="memberChart">
-                </canvas>
-
-            </div>
-
-        </div>
-
-    </main>
-
+<aside class="sidebar">
+<h2>💰 Finance</h2>
+<ul>
+<li><a href="dashboard.html">🏠 Dashboard</a></li>
+<li><a href="transactions.html">💸 Transactions</a></li>
+<li><a href="reports.html">📊 Reports</a></li>
+<li><a href="budgets.html">💳 Budgets</a></li>
+<li><a href="goals.html">🎯 Goals</a></li>
+<li><a href="investment.html">💰 Investments</a></li>
+</ul>
+<button id="logoutBtn" class="logout-btn">Logout</button>
+</aside>
+
+<main>
+<h1>Dashboard</h1>
+
+<!-- Month Filter -->
+<div class="month-filter-container">
+<label for="monthFilter">Filter by Month:</label>
+<select id="monthFilter">
+<option value="all">All Time</option>
+</select>
 </div>
 
-<script
-src="https://cdn.jsdelivr.net/npm/chart.js">
-</script>
+<!-- Summary Cards -->
+<div class="cards">
+  <div class="card income-card">
+    <h3>Income</h3>
+    <h2 id="incomeTotal">₹0</h2>
+  </div>
+  <div class="card expense-card">
+    <h3>Expense</h3>
+    <h2 id="expenseTotal">₹0</h2>
+  </div>
+  <div class="card balance-card">
+    <h3>Balance</h3>
+    <h2 id="balanceTotal">₹0</h2>
+  </div>
+</div>
 
-<script
-type="module"
-src="js/dashboard.js">
-</script>
+<!-- Charts -->
+<div class="charts">
+  <div class="chart-card">
+    <h3>Expense Categories</h3>
+    <canvas id="expenseChart"></canvas>
+  </div>
+  <div class="chart-card">
+    <h3>Member Spending</h3>
+    <canvas id="memberChart"></canvas>
+  </div>
+</div>
+
+<!-- Budget Tracker -->
+<h2 id="budgetTitle">Monthly Budget Tracker</h2>
+<div id="budgetContainer"></div>
+
+<!-- Recent Transactions -->
+<h2>Recent Transactions</h2>
+<table class="recent-table">
+  <thead>
+    <tr><th>Date</th><th>Member</th><th>Category</th><th>Amount</th></tr>
+  </thead>
+  <tbody id="recentTransactions"></tbody>
+</table>
+
+<!-- Goals -->
+<h2>Goals</h2>
+<div id="dashboardGoals"></div>
+
+</main>
+</div>
+
+<script type="module" src="js/dashboard.js"></script>
 <script src="js/pwa.js"></script>
 </body>
-
 </html>
