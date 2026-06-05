@@ -19,65 +19,88 @@
 
 <div class="layout">
 
-<aside class="sidebar">
+    <aside class="sidebar">
 
-<h2>💰 Finance</h2>
+        <h2>💰 Finance</h2>
 
-<ul>
+        <ul>
 
-<li>
-<a href="dashboard.html">🏠 Dashboard</a>
-</li>
+            <li>
+                <a href="dashboard.html">🏠 Dashboard</a>
+            </li>
 
-<li>
-<a href="transactions.html">💸 Transactions</a>
-</li>
+            <li>
+                <a href="transactions.html">💸 Transactions</a>
+            </li>
 
-<li>
-<a href="reports.html">📊 Reports</a>
-</li>
+            <li>
+                <a href="reports.html">📊 Reports</a>
+            </li>
 
-<li class="active">
-<a href="goals.html">🎯 Goals</a>
-</li>
+            <li>
+                <a href="budgets.html">💳 Budgets</a>
+            </li>
 
-</ul>
+            <li class="active">
+                <a href="goals.html">🎯 Goals</a>
+            </li>
 
-</aside>
+        </ul>
 
-<main>
+    </aside>
 
-<h1>🎯 Financial Goals</h1>
+    <main>
 
-<div class="goal-form">
+        <div class="page-header">
 
-<input
-id="goalName"
-placeholder="Goal Name">
+            <h1>🎯 Financial Goals</h1>
 
-<input
-id="goalTarget"
-type="number"
-placeholder="Target Amount">
+            <p>
+                Track savings for Honda Amaze, Emergency Fund,
+                Vacation, House Fund and more.
+            </p>
 
-<button id="addGoalBtn">
-Add Goal
-</button>
+        </div>
 
-</div>
+        <div class="goal-form-card">
 
-<div id="goalsContainer">
+            <h2>Create New Goal</h2>
 
-</div>
+            <div class="goal-form">
 
-</main>
+                <input
+                    id="goalName"
+                    type="text"
+                    placeholder="Goal Name">
+
+                <input
+                    id="goalTarget"
+                    type="number"
+                    placeholder="Target Amount">
+
+                <button id="addGoalBtn">
+                    Add Goal
+                </button>
+
+            </div>
+
+        </div>
+
+        <div id="goalsContainer"
+             class="goals-grid">
+
+        </div>
+
+    </main>
 
 </div>
 
 <script type="module"
 src="js/goals.js">
 </script>
+
 <script src="js/pwa.js"></script>
+
 </body>
 
 </html>

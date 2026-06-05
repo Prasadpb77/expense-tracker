@@ -11,7 +11,9 @@ import {
 from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 const addGoalBtn =
-document.getElementById("addGoalBtn");
+document.getElementById(
+"addGoalBtn"
+);
 
 addGoalBtn.addEventListener(
 "click",
@@ -29,10 +31,10 @@ async ()=>{
  ).value
  );
 
- if(!name || target<=0){
+ if(!name || target <= 0){
 
   alert(
-  "Enter valid goal"
+   "Enter valid goal"
   );
 
   return;
@@ -41,8 +43,8 @@ async ()=>{
 
  await addDoc(
  collection(
- db,
- "goals"
+  db,
+  "goals"
  ),
  {
   name,
@@ -52,11 +54,11 @@ async ()=>{
 
  document.getElementById(
  "goalName"
- ).value="";
+ ).value = "";
 
  document.getElementById(
  "goalTarget"
- ).value="";
+ ).value = "";
 
  loadGoals();
 
@@ -67,12 +69,52 @@ window.deleteGoal =
 async function(id){
 
  await deleteDoc(
- doc(
- db,
- "goals",
- id
- )
+  doc(
+   db,
+   "goals",
+   id
+  )
  );
+
+ loadGoals();
+
+};
+
+window.addContribution =
+async function(goalId){
+
+ const input =
+ document.getElementById(
+ `contribution-${goalId}`
+ );
+
+ const amount =
+ Number(
+  input.value
+ );
+
+ if(amount <= 0){
+
+  alert(
+   "Enter valid amount"
+  );
+
+  return;
+
+ }
+
+ await addDoc(
+ collection(
+  db,
+  "goalContributions"
+ ),
+ {
+  goalId,
+  amount
+ }
+ );
+
+ input.value = "";
 
  loadGoals();
 
@@ -85,103 +127,134 @@ async function loadGoals(){
  "goalsContainer"
  );
 
- container.innerHTML="";
+ container.innerHTML = "";
 
  const goalsSnapshot =
  await getDocs(
  collection(
- db,
- "goals"
+  db,
+  "goals"
  )
  );
 
- let income=0;
- let expense=0;
-
- const txSnapshot =
+ const contributionSnapshot =
  await getDocs(
  collection(
- db,
- "transactions"
+  db,
+  "goalContributions"
  )
  );
 
- txSnapshot.forEach(doc=>{
+ const contributions = {};
 
- const data=
- doc.data();
+ contributionSnapshot.forEach(docItem=>{
 
- if(data.type==="Income"){
-  income+=data.amount;
- }
+  const data =
+  docItem.data();
 
- if(data.type==="Expense"){
-  expense+=data.amount;
- }
+  contributions[
+   data.goalId
+  ] =
+  (
+   contributions[
+    data.goalId
+   ] || 0
+  )
+  + Number(
+   data.amount
+  );
 
  });
 
- const saved=
- income-expense;
-
  goalsSnapshot.forEach(goal=>{
 
- const data=
- goal.data();
+  const data =
+  goal.data();
 
- const percent=
- Math.min(
- (saved/data.target)*100,
- 100
- );
+  const current =
+  contributions[
+   goal.id
+  ] || 0;
 
- container.innerHTML += `
+  const percent =
+  Math.min(
+   (
+    current /
+    data.target
+   ) * 100,
+   100
+  );
 
- <div class="goal-card">
+  container.innerHTML += `
 
- <h3>
- ${data.name}
- </h3>
+  <div class="goal-card">
 
- <p>
- Target:
- ₹${data.target.toLocaleString()}
- </p>
+   <h3>
+   ${data.name}
+   </h3>
 
- <div class="goal-progress">
+   <p>
+   Target:
+   ₹${data.target.toLocaleString()}
+   </p>
 
- <div
- class="goal-fill"
- style="
- width:${percent}%">
- </div>
+   <p>
+   Saved:
+   ₹${current.toLocaleString()}
+   </p>
 
- </div>
+   <div class="goal-progress">
 
- <p>
+    <div
+     class="goal-fill"
+     style="
+      width:${percent}%">
+    </div>
 
- ₹${saved.toLocaleString()}
+   </div>
 
- /
+   <p>
 
- ₹${data.target.toLocaleString()}
+   ${percent.toFixed(1)}%
+   Complete
 
- </p>
+   </p>
 
- <button
- class="delete-btn"
- onclick="
- deleteGoal(
- '${goal.id}'
- )">
+   <div
+   class="goal-add-section">
 
- Delete
+    <input
+     type="number"
+     id="contribution-${goal.id}"
+     placeholder="Add Amount">
 
- </button>
+    <button
+     class="goal-add-btn"
+     onclick="
+      addContribution(
+      '${goal.id}'
+      )">
 
- </div>
+      Add Money
 
- `;
+    </button>
+
+   </div>
+
+   <button
+    class="delete-btn"
+    onclick="
+     deleteGoal(
+     '${goal.id}'
+     )">
+
+    Delete
+
+   </button>
+
+  </div>
+
+  `;
 
  });
 

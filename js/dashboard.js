@@ -210,25 +210,20 @@ async function loadDashboard(){
  income-expense
  ).toLocaleString();
 
- const savedAmount =
- income-expense;
-
  renderCharts(
- categoryTotals,
- memberTotals
- );
-
- renderRecentTransactions(
- transactions
- );
-
- renderBudgets(
- categoryTotals
- );
-
- loadGoalsWidget(
- savedAmount
- );
+    categoryTotals,
+    memberTotals
+   );
+   
+   renderRecentTransactions(
+    transactions
+   );
+   
+   renderBudgets(
+    categoryTotals
+   );
+   
+   loadGoalsWidget();
 
 }
 
@@ -387,10 +382,14 @@ function renderBudgets(
  ];
 
  const percent =
+ budget > 0
+ ?
  Math.min(
  (spent/budget)*100,
  100
- );
+ )
+ :
+ 0;
 
  container.innerHTML += `
 
@@ -428,73 +427,115 @@ function renderBudgets(
 
 }
 
-async function loadGoalsWidget(
- savedAmount
-){
+async function loadGoalsWidget(){
 
- const container =
- document.getElementById(
- "dashboardGoals"
- );
-
- if(!container) return;
-
- container.innerHTML="";
-
- const snapshot =
- await getDocs(
- collection(
- db,
- "goals"
- )
- );
-
- snapshot.forEach(goal=>{
-
- const data=
- goal.data();
-
- const percent=
- Math.min(
- (savedAmount/data.target)*100,
- 100
- );
-
- container.innerHTML += `
-
- <div class="goal-card">
-
- <h3>
- ${data.name}
- </h3>
-
- <div class="goal-progress">
-
- <div
- class="goal-fill"
- style="
- width:${percent}%">
- </div>
-
- </div>
-
- <p>
-
- ₹${savedAmount.toLocaleString()}
-
- /
-
- ₹${data.target.toLocaleString()}
-
- </p>
-
- </div>
-
- `;
-
- });
-
-}
+    const container =
+    document.getElementById(
+    "dashboardGoals"
+    );
+   
+    if(!container) return;
+   
+    container.innerHTML="";
+   
+    const goalsSnapshot =
+    await getDocs(
+     collection(
+      db,
+      "goals"
+     )
+    );
+   
+    const contributionSnapshot =
+    await getDocs(
+     collection(
+      db,
+      "goalContributions"
+     )
+    );
+   
+    const contributions = {};
+   
+    contributionSnapshot.forEach(docItem=>{
+   
+     const data =
+     docItem.data();
+   
+     contributions[
+      data.goalId
+     ] =
+     (
+      contributions[
+       data.goalId
+      ] || 0
+     )
+     + Number(
+      data.amount
+     );
+   
+    });
+   
+    goalsSnapshot.forEach(goal=>{
+   
+     const data =
+     goal.data();
+   
+     const current =
+     contributions[
+      goal.id
+     ] || 0;
+   
+     const percent =
+     Math.min(
+      (
+       current /
+       data.target
+      ) * 100,
+      100
+     );
+   
+     container.innerHTML += `
+   
+     <div class="goal-card">
+   
+      <h3>
+      ${data.name}
+      </h3>
+   
+      <div class="goal-progress">
+   
+       <div
+        class="goal-fill"
+        style="
+         width:${percent}%">
+       </div>
+   
+      </div>
+   
+      <p>
+   
+      ₹${current.toLocaleString()}
+   
+      /
+   
+      ₹${data.target.toLocaleString()}
+   
+      </p>
+   
+      <small>
+   
+      ${percent.toFixed(1)}%
+      Complete
+   
+      </small>
+   
+     </div>
+   
+     `;
+   
+    });
+   
+   }
 async function loadBudgets(){
 
         try{
