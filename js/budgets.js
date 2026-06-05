@@ -2,35 +2,40 @@ import { db }
 from "./firebase-config.js";
 
 import {
+ collection,
+ getDocs,
  doc,
- getDoc,
  setDoc
 }
 from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
+const BUDGET_DOC_ID =
+"r85XT3RtwjqT1u7Dv0wh";
+
 const categories = [
 
-    "Food",
-    "Fuel",
-    "Travel",
-    "Shopping",
-    "Bills",
-    "Medical",
-    "EMI",
-   
-    "Entertainment",
-    "Investment",
-    "Rent",
-    "Groceries",
-    "Dining",
-    "Insurance",
-    "Subscriptions",
-    "Education",
-    "Vacation",
-    "Emergency Fund",
-    "Other"
-   
-   ];
+ "Food",
+ "Fuel",
+ "Travel",
+ "Shopping",
+ "Bills",
+ "Medical",
+ "EMI",
+
+ "Entertainment",
+ "Investment",
+ "Rent",
+ "Groceries",
+ "Dining",
+ "Insurance",
+ "Subscriptions",
+ "Education",
+ "Vacation",
+ "EmergencyFund",
+ "Other"
+
+];
+
 async function loadBudgets(){
 
  const container =
@@ -38,51 +43,78 @@ async function loadBudgets(){
  "budgetEditor"
  );
 
- const snapshot =
- await getDocs(
-  collection(
-   db,
-   "budgetLimits"
-  )
- );
+ try{
 
- const data =
- snapshot.exists()
- ?
- snapshot.data()
- :
- {};
+  const snapshot =
+  await getDocs(
+   collection(
+    db,
+    "budgetLimits"
+   )
+  );
 
- container.innerHTML="";
+  let data = {};
 
- categories.forEach(cat=>{
+  snapshot.forEach(docItem=>{
 
-    container.innerHTML += `
+   if(docItem.id === BUDGET_DOC_ID){
 
-    <div class="budget-card">
-    
-    <div class="budget-header">
-    
-    <h3>${cat}</h3>
-    
-    <span>
-    ₹
-    </span>
-    
-    </div>
-    
-    <input
-    class="budget-input"
-    type="number"
-    id="${cat}"
-    value="${data[cat] || 0}">
-    
-    </div>
-    
-    `;
+    data =
+    docItem.data();
 
- });
+   }
 
+  });
+
+  container.innerHTML = "";
+
+  categories.forEach(cat=>{
+
+   const displayName =
+   cat === "EmergencyFund"
+   ?
+   "Emergency Fund"
+   :
+   cat;
+
+   container.innerHTML += `
+
+   <div class="budget-card">
+
+     <div class="budget-header">
+
+       <h3>${displayName}</h3>
+
+       <span>₹</span>
+
+     </div>
+
+     <input
+      class="budget-input"
+      type="number"
+      min="0"
+      id="${cat}"
+      value="${data[cat] || 0}">
+
+   </div>
+
+   `;
+
+  });
+
+ }
+ catch(error){
+
+  console.error(
+   "Budget Load Error",
+   error
+  );
+
+  alert(
+   "Unable to load budgets"
+  );
+
+ }
 }
 
 document.getElementById(
@@ -91,30 +123,46 @@ document.getElementById(
 "click",
 async ()=>{
 
- const payload={};
+ try{
 
- categories.forEach(cat=>{
+  const payload = {};
 
- payload[cat] =
- Number(
- document.getElementById(cat)
- .value
- );
+  categories.forEach(cat=>{
 
- });
+   payload[cat] =
+   Number(
+    document.getElementById(cat)
+    .value || 0
+   );
 
- await setDoc(
- doc(
- db,
- "settings",
- "budgetLimits"
- ),
- payload
- );
+  });
 
- alert(
- "Budgets Saved"
- );
+  await setDoc(
+   doc(
+    db,
+    "budgetLimits",
+    BUDGET_DOC_ID
+   ),
+   payload
+  );
+
+  alert(
+   "✅ Budgets Saved Successfully"
+  );
+
+ }
+ catch(error){
+
+  console.error(
+   "Save Error",
+   error
+  );
+
+  alert(
+   "Failed to save budgets"
+  );
+
+ }
 
 });
 
