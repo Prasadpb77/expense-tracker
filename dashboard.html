@@ -134,7 +134,29 @@
 
             </div>
 
-        </div>        
+        </div>  
+        <!-- Current Month Summary -->
+        <div class="report-filter">
+            <label for="dashboardMonth">Month: </label>
+            <select id="dashboardMonth">
+              <option value="all">All Time</option>
+              <!-- Month options will be populated dynamically -->
+            </select>
+          </div>
+<div class="cards">
+    <div class="card income-card">
+      <h3>Income (Current Month)</h3>
+      <h2 id="incomeTotalMonth">₹0</h2>
+    </div>
+    <div class="card expense-card">
+      <h3>Expense (Current Month)</h3>
+      <h2 id="expenseTotalMonth">₹0</h2>
+    </div>
+    <div class="card balance-card">
+      <h3>Balance (Current Month)</h3>
+      <h2 id="balanceTotalMonth">₹0</h2>
+    </div>
+  </div>      
         <!-- Add Transaction -->
 
         <div class="add-section">
