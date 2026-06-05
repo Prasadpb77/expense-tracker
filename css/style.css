@@ -896,3 +896,50 @@
     color:white;
     border:none;
     }
+    .report-filter{
+margin-bottom:20px;
+}
+
+.report-filter select{
+padding:12px;
+border-radius:10px;
+border:1px solid #ddd;
+font-size:15px;
+min-width:200px;
+}
+
+.chart-card{
+background:white;
+padding:20px;
+border-radius:20px;
+box-shadow:0 10px 25px rgba(0,0,0,.05);
+margin-bottom:20px;
+}
+
+.dark .chart-card{
+background:#1e293b;
+}
+
+.report-filter{
+    margin-bottom:20px;
+    }
+    
+    .report-filter select{
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #ddd;
+    font-size:15px;
+    min-width:200px;
+    }
+    
+    .chart-card{
+    background:white;
+    padding:20px;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,.05);
+    margin-bottom:20px;
+    }
+    
+    .dark .chart-card{
+    background:#1e293b;
+    }
