@@ -10,6 +10,8 @@ import {
 const tableBody = document.getElementById("transactionBody");
 const searchBox = document.getElementById("searchBox");
 const filterType = document.getElementById("filterType");
+const filterMember = document.getElementById("filterMember");
+const filterCategory = document.getElementById("filterCategory");
 
 let transactions = [];
 
@@ -47,14 +49,18 @@ function renderTable() {
   tableBody.innerHTML = "";
   const search = searchBox.value.toLowerCase();
   const typeFilter = filterType.value;
+  const memberFilter = filterMember.value;
+  const categoryFilter = filterCategory.value;
 
-  const filtered = transactions.filter((item) => {
+  const filtered = transactions.filter(item => {
     const matchSearch = (item.description || "").toLowerCase().includes(search);
     const matchType = !typeFilter || item.type === typeFilter;
-    return matchSearch && matchType;
+    const matchMember = !memberFilter || item.member === memberFilter;
+    const matchCategory = !categoryFilter || item.category === categoryFilter;
+    return matchSearch && matchType && matchMember && matchCategory;
   });
 
-  filtered.forEach((item) => {
+  filtered.forEach(item => {
     const row = document.createElement("tr");
 
     row.innerHTML = `
@@ -126,7 +132,10 @@ function renderTable() {
   });
 }
 
+// Add event listeners for search and filters
 searchBox?.addEventListener("input", renderTable);
 filterType?.addEventListener("change", renderTable);
+filterMember?.addEventListener("change", renderTable);
+filterCategory?.addEventListener("change", renderTable);
 
 loadTransactions();

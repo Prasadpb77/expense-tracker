@@ -1179,3 +1179,79 @@ background:#1e293b;
 .transaction-table tr:hover {
     background-color: rgba(0, 0, 0, 0.03);
 }
+/* Filters container */
+.filter-card {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+/* All filter selects and search input */
+.filter-card select,
+.filter-card input[type="text"] {
+    padding: 6px 10px;
+    font-size: 0.9rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    outline: none;
+    min-width: 150px;
+    transition: all 0.2s ease;
+}
+
+/* Focus effect */
+.filter-card select:focus,
+.filter-card input[type="text"]:focus {
+    border-color: #4f46e5; /* Dashboard primary color */
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+}
+
+/* Responsive layout for small screens */
+@media (max-width: 600px) {
+    .filter-card {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .filter-card select,
+    .filter-card input[type="text"] {
+        width: 100%;
+    }
+}
+/* Filters container */
+.filter-card {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+/* All filter selects and search input */
+.filter-card select,
+.filter-card input[type="text"] {
+    padding: 6px 10px;
+    font-size: 0.9rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    outline: none;
+    min-width: 150px;
+    transition: all 0.2s ease;
+}
+
+/* Focus effect */
+.filter-card select:focus,
+.filter-card input[type="text"]:focus {
+    border-color: #4f46e5; /* Dashboard primary color */
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+}
+
+/* Responsive layout for small screens */
+@media (max-width: 600px) {
+    .filter-card {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .filter-card select,
+    .filter-card input[type="text"] {
+        width: 100%;
+    }
+}
