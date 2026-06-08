@@ -55,11 +55,15 @@ Goals
 
 <div class="filter-card">
 
+    <select id="filterMonth">
+        <option value="all">All Time</option>
+        <!-- Month options will be dynamically added via JS -->
+    </select>
     <input
       type="text"
       id="searchBox"
       placeholder="Search description...">
-  
+    
     <select id="filterType">
       <option value="">All Types</option>
       <option value="Income">Income</option>
@@ -94,7 +98,7 @@ Goals
       <option value="Gifts">Gifts</option>
       <option value="RD(Goals)">RD(Goals)</option>
     </select>
-  
+    <button id="exportBtn">Export CSV</button>
   </div>
 
 <table class="transaction-table">
